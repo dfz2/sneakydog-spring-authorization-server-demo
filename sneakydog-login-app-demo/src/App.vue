@@ -1,7 +1,5 @@
 <template>
     <div>
-
-
         <input v-model="loginRef.username"/>&nbsp;
         <input v-model="loginRef.password"/>&nbsp;
         <button @click="doLogin">Login</button>
@@ -26,11 +24,10 @@ let  doLogin = async () => {
         username: loginRef.value.username,
         password: loginRef.value.password
     };
+
     await axios.postForm('/login', data, {
         headers: {'content-type': 'application/x-www-form-urlencoded'}
     })
-
-
 
 }
 
