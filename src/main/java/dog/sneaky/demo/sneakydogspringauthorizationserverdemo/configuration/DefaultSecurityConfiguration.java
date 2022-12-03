@@ -1,17 +1,24 @@
 package dog.sneaky.demo.sneakydogspringauthorizationserverdemo.configuration;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,10 +36,16 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -41,6 +54,7 @@ import java.util.UUID;
 
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class DefaultSecurityConfiguration {
 
     @Bean
@@ -64,17 +78,65 @@ public class DefaultSecurityConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, final ObjectMapper objectMapper)
             throws Exception {
 
         http.csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 )
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers(new AntPathRequestMatcher("/index")).permitAll().anyRequest().authenticated())
-                .formLogin(formlogin -> formlogin.loginPage("/login").permitAll());
+                .formLogin(formlogin -> formlogin.loginPage("/login").permitAll().successHandler(new CustomSuccessHandler(objectMapper) {
+
+                })).requestCache(rc -> rc.requestCache(new HttpSessionRequestCache()));
 
         return http.build();
+    }
+
+
+
+
+    static class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+        private final ObjectMapper objectMapper;
+
+        private RequestCache requestCache = new HttpSessionRequestCache();
+
+        CustomSuccessHandler(final ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+            setTargetUrlParameter("redirectUrl");
+        }
+
+        public void setRequestCache(RequestCache requestCache) {
+            this.requestCache = requestCache;
+        }
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+            SavedRequest savedRequest = this.requestCache.getRequest(request, response);
+            if (savedRequest == null) {
+                super.onAuthenticationSuccess(request, response, authentication);
+                return;
+            }
+
+            String targetUrlParameter = getTargetUrlParameter();
+            if (isAlwaysUseDefaultTargetUrl()
+                    || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
+                this.requestCache.removeRequest(request, response);
+                super.onAuthenticationSuccess(request, response, authentication);
+                return;
+            }
+
+            clearAuthenticationAttributes(request);
+            // Use the DefaultSavedRequest URL
+            String targetUrl = savedRequest.getRedirectUrl();
+
+            response.setStatus(200);
+            response.getWriter().write(objectMapper.writeValueAsString(new CustomAuthentication(authentication, targetUrl)));
+        }
+    }
+
+
+    record CustomAuthentication(Authentication authentication, String redirectUrl) {
     }
 
     @Bean
@@ -128,8 +190,7 @@ public class DefaultSecurityConfiguration {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             keyPair = keyPairGenerator.generateKeyPair();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
         return keyPair;
