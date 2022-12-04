@@ -9,11 +9,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 @Configuration
 @EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
-public class DistributedLockConfiguration {
+public class DistributedLockConfiguration  {
 
-    @Bean
-    public LockProvider lockProvider(RedisConnectionFactory connectionFactory) {
-        return new RedisLockProvider(connectionFactory, "LOCAL");
-    }
+
+    // MethodProxyLockConfiguration
 
 }

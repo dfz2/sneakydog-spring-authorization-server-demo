@@ -78,7 +78,7 @@ spring:
     encoding: utf-8
     check-template-location: true
   mvc:
-    log-request-details: true
+    log-request-details: false
   session:
     redis:
       namespace: "spring:session"
@@ -90,6 +90,13 @@ spring:
   artemis:
     embedded:
       data-directory:
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 #arthas:
 #  agent-id: hsehdfsfghhwertyfad
@@ -107,6 +114,8 @@ mybatis:
     default-statement-timeout: 30
     cache-enabled: true
 
+
+
 pagehelper:
   support-methods-arguments: true
   params: count=countSql
@@ -115,11 +124,7 @@ pagehelper:
 
 logging:
   level:
-    root: info
-    org.springframework.web: debug
-    org.springframework.security: INFO
-    org.springframework.security.oauth2: INFO
-    org.springframework.security.jackson2.SecurityJackson2Modules: off
+    org.springframework.security: debug
 
 
 management:

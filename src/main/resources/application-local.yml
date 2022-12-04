@@ -21,18 +21,17 @@ spring:
     domain: http://localhost:9001
     name: sneakydog-spring-authorization-server-demo
   mvc:
-    log-request-details: true
+    log-request-details: false
 
 
-
-logging:
-  file:
-    path: ./logs
-  level:
-    root: info
-    org.springframework.web: debug
-    org.springframework.security: debug
-    org.springframework.security.oauth2: debug
+#
+#logging:
+#  file:
+#    path: ./logs
+#  level:
+#    org.springframework.web: debug
+#    org.springframework.security: debug
+#    org.springframework.security.oauth2: debug
 
 
 management:

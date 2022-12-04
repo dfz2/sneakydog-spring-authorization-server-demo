@@ -75,11 +75,11 @@ public class DefaultSecurityConfiguration {
     @Value("${spring.application.rsa.privateKey}")
     private String privateKey;
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/js/*.js", "/favicon.ico", "/img/**", "/error**", "/webjars/**");
-    }
-//
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/js/*.js", "/favicon.ico", "/img/**", "/error**", "/webjars/**");
+//    }
+////
 
     @Bean
     @Order(1)
@@ -154,6 +154,7 @@ public class DefaultSecurityConfiguration {
         http.authorizeHttpRequests(a -> a.requestMatchers("/login/**", "/login.html",
                         "/register.html",
                         "/register",
+                        "/js/*.js", "/favicon.ico", "/img/**", "/error**", "/webjars/**",
                         "/redission/**",
                         "/checkEmail.html",
                         "/sendEmailCAPTCHA.html",
