@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface UserLoginLogRepository extends CrudRepository<UserLoginLog, Long> {
-    List<UserLoginLog> findFirst10ByUsernameOrderByCreatedAtDesc(String username);
+    List<UserLoginLog> findByUsernameOrderByCreatedAtDesc(String username);
 
 }

@@ -24,6 +24,7 @@ public class UserLoginLog {
     private String loginStatus;
     private String region;
     private String userAgent;
+
     private Instant createdAt;
 
     @Override

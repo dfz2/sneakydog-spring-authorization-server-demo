@@ -6,13 +6,16 @@ import dog.sneaky.demo.database.dao.MyAuthorityDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -30,17 +33,12 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("123131");
         }
 
-        if (customUser.isDisabled()) {
-            log.error("用户["+username+"]不存在");
-            throw new UsernameNotFoundException("123131");
-        }
-
         List<String> perms = myAuthorityDAO.loadPermsByUsername(username);
         if (!ObjectUtils.isEmpty(perms)){
             customUser.setPerms(perms);
         }
 
-        return new User(username, customUser.getPassword(), customUser.getAuthorities());
+        return new User(username, customUser.getPassword(), perms.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 
 
