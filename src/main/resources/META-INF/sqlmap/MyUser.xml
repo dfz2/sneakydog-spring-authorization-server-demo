@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dog.sneaky.demo.database.dao.MyUserDAO">
+
+    <select id="loadByUsername" parameterType="String" resultType="MyUserDO">
+        select username, password, enabled from users where username = #{username}
+    </select>
+
+    <select id="list" parameterType="MyUserDO" resultType="MyUserDO">
+        select username, password, enabled from users
+    </select>
+
+    <insert id="insert" parameterType="MyUserDO" useGeneratedKeys="true" keyProperty="id">
+        insert into users(username, password, enabled) values (#{username}, #{password} , #{enabled})
+    </insert>
+
+    <update id="resetPasswd">
+        update users set password = #{newPassword} where enabled = '1' and  username = #{username}
+    </update>
+
+</mapper>

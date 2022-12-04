@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Registered Clients Modal Examples</title>
+
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>Add Registered Clients Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-8">
+                    <form th:action="@{/registered/clients/add}" method="post" id="registered-add-form" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label for="clientName" class="col-sm-4 col-form-label text-right">ClientName</label>
+                            <div class="col-sm-6 input-valid">
+                                <input type="text" class="form-control" name="clientName" id="clientName"
+                                       placeholder="client Name">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="ClientId" class="col-sm-4 col-form-label text-right">ClientId</label>
+                            <div class="col-sm-6">
+                                <p class="form-control-plaintext text-info" th:text="${registeredClientsDTO.clientId}"></p>
+                                <input type="hidden" name="clientId" id="clientId" th:value="${registeredClientsDTO.clientId}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="clientSecret" class="col-sm-4 col-form-label text-right">ClientSecret</label>
+                            <div class="col-sm-6 input-valid">
+                                <input type="text" class="form-control" name="clientSecret" id="clientSecret"
+                                       placeholder="Client Secret">
+                            </div>
+                            <div class="col-sm-2 ">
+                                <button type="button" class="btn btn-primary random">random</button>
+                            </div>
+                        </div>
+
+<!--                        <div class="form-group row">-->
+<!--                            <label for="clientAuthenticationMethods" class="col-sm-4 col-form-label text-right">ClientAuthenticationMethods</label>-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <select class="select2 form-control"-->
+<!--                                        multiple="multiple"-->
+<!--                                        name="clientAuthenticationMethods"-->
+<!--                                        id="clientAuthenticationMethods"-->
+<!--                                        data-placeholder="Client Authentication Methods" style="width: 100%;">-->
+<!--                                    <option value="none">none</option>-->
+<!--                                    <option value="basic">basic</option>-->
+<!--                                    <option value="post">post</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group row">-->
+<!--                            <label for="authorizationGrantTypes" class="col-sm-4 col-form-label text-right">AuthorizationGrantTypes</label>-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <select class="select2 form-control"-->
+<!--                                        multiple="multiple"-->
+<!--                                        name="authorizationGrantTypes"-->
+<!--                                        id="authorizationGrantTypes"-->
+<!--                                        data-placeholder="Authorization GrantTypes" style="width: 100%;">-->
+<!--                                    <option value="authorization_code">authorization_code</option>-->
+<!--                                    <option value="client_credentials">client_credentials</option>-->
+<!--                                    <option value="refresh_token">refresh_token</option>-->
+<!--                                    <option value="password">password</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="form-group row">
+                            <label for="redirectUris" class="col-sm-4 col-form-label text-right">RedirectUris</label>
+                            <div class="col-sm-6 input-valid">
+                                <input type="text" class="form-control" name="redirectUris" id="redirectUris"
+                                       placeholder="Redirect Uris">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="scopes" class="col-sm-4 col-form-label text-right">Scopes</label>
+                            <div class="col-sm-6">
+                                <select class="select2 form-control"
+                                        multiple="multiple" name="scopes"
+                                        id="scopes" data-placeholder="Select Scopes" style="width: 100%;">
+                                    <option value="openid">openid</option>
+                                    <option value="profile">profile</option>
+                                    <option value="email">email</option>
+                                    <option value="address">address</option>
+                                    <option value="phone">phone</option>
+                                </select>
+                            </div>
+                        </div>
+
+<!--                        <div class="form-group row">-->
+<!--                            <label for="clientSettings"-->
+<!--                                   class="col-sm-4 col-form-label text-right">ClientSettings</label>-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <input type="text" class="form-control" name="clientSettings" id="clientSettings"-->
+<!--                                       placeholder="Client Settings">-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        <div class="form-group row">-->
+<!--                            <label for="tokenSettings" class="col-sm-4 col-form-label text-right">tokenSettings</label>-->
+<!--                            <div class="col-sm-6">-->
+<!--                                <input type="text" class="form-control" name="tokenSettings" id="tokenSettings"-->
+<!--                                       placeholder="Token Settings">-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <hr sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')"/>
+
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-right"></label>
+                            <div class="col-sm-6 ">
+                                <button type="submit" sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')"
+                                        class="btn btn-primary" id="submitBtn">SaveOrUpdate
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="pagejs">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/additional-methods.min.js"></script>
+    <script src="https://unpkg.com/uuid@latest/dist/umd/uuidv4.min.js"></script>
+</th:block>
+<script layout:fragment="js">
+
+    $(function (){
+
+        $('.random').click(function (){
+            $("input[name='clientSecret']").val(uuidv4())
+        })
+
+        //Initialize Select2 Elements
+        $('.select2').select2()
+
+        $.validator.setDefaults({
+            submitHandler: function (form) {
+                console.log("Form successful submitted!");
+                loading('submitBtn');
+                form.submit();
+            }
+        });
+
+        $('#registered-add-form').validate({
+            rules: {
+                "clientName": {
+                    required: true,
+                },
+                "clientSecret": {
+                    required: true,
+                },
+                "scopes": {
+                    required: true,
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                if (element.hasClass('select2')) {
+                    error.insertAfter(element.next('span'));
+                } else {
+                    element.closest('.input-group,.input-valid').append(error);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                console.log(element)
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+    });
+
+</script>
+
+</body>
+</html>

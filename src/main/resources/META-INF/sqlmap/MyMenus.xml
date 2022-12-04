@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dog.sneaky.demo.database.dao.MyMenusDAO">
+
+    <select id="loadMenusByUsername" parameterType="MyMenusDO" resultType="MyMenusDO">
+        select menus.* from users
+        inner join user_role on users.id = user_role.userId
+        inner join role_menus on user_role.roleId = role_menus.roleId
+        inner join menus on menus.id = role_menus.menuId
+        where users.username = #{username}
+    </select>
+
+    <select id="listMenus" parameterType="MyMenusDO" resultType="MyMenusDO">
+        select menus.* from menus
+    </select>
+
+    <insert id="insert" parameterType="MyMenusDO" useGeneratedKeys="true" keyProperty="id">
+        insert into menus(parentId, menuName, menuType, perms, url)
+        values (#{parentId}, #{menuName} , #{menuType} , #{perms} , #{url})
+    </insert>
+
+    <update id="update" parameterType="MyMenusDO">
+        update menus
+        set parentId = #{parentId},
+            menuName = #{menuName},
+            menuType = #{menuType},
+            perms    = #{perms},
+            url      = #{url}
+        where id = #{id}
+    </update>
+
+</mapper>

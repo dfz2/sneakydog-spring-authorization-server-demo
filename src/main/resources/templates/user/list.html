@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>Users Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="fixed-table-toolbar" id="toolbar">
+                <button sec:authorize="hasAuthority('ROLE_USER_ADD')" class="btn btn-w-m btn-primary addnew" data-toggle="modal"><i class="fa fa-plus"></i> 新增
+                </button>
+            </div>
+            <table id="table">
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script layout:fragment="js">
+    $(function () {
+
+        $('.addnew').click(function (){
+
+        });
+
+        $('#table').bootstrapTable({
+            url: "/user/list",
+            toolbar: '#toolbar',
+            dataType: 'json',
+            method: 'get',
+            contentType: "application/x-www-form-urlencoded",//发送到服务器的数据编码类型
+            pagination: true,            //是否显示分页
+            pageSize: 10,                //设置每页的记录行数
+            pageNumber: 1,               //设置首页页码
+            search: true,
+            singleSelect: false,         //设置是否单选
+            checkboxHeader: true,
+            clickToSelect: true,
+            showRefresh: true,   //是否显示刷新按钮
+            showToggle: false,    //是否显示详细视图和列表视图的切换按钮
+            showColumns: true,   //选择要显示的列
+            striped: true,      //是否显示行间隔色
+            catch: true,                //禁用AJAX数据缓存
+            sidePagination: "server",    //服务端处理分页
+            queryParamsType: "undefined",//设置参数格式
+            queryParams: function queryParams(params) {//设置查询参数
+                return {
+                    t: new Date().getTime(),
+                    pageNum: params.pageNumber,
+                    pageSize: params.pageSize,
+                    username: params.searchText
+                };
+            },
+            responseHandler: function (res) {
+                console.log(res)
+                if (res) {
+                    return res;
+                } else {
+                    return {
+                        rows: [],
+                        total: 0
+                    };
+                }
+            },
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    title: 'username',
+                    field: 'username',
+                    valign: 'middle'
+                }, {
+                    title: 'email',
+                    field: 'email',
+                    valign: 'middle'
+                }
+                , {
+                    title: 'age',
+                    field: 'age',
+                    valign: 'middle'
+                }
+            ]
+
+        });
+    })
+</script>
+
+</body>
+</html>

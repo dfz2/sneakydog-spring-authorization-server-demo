@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dog.sneaky.demo.database.dao.RoleDAO">
+
+    <select id="list" parameterType="RoleDO" resultType="RoleDO">
+        select id, roleName, remark from roles
+        <where>
+            <if test="roleName != null and roleName != ''">
+                and roleName like concat('%', #{roleName}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

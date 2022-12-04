@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">demo</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" th:href="@{/webjars/fortawesome__fontawesome-free/5.15.3/css/all.min.css}">
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{/webjars/AdminLTE/3.1.0/dist/css/adminlte.min.css}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" th:href="@{/webjars/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css}">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+
+    <link href="https://cdn.bootcdn.net/ajax/libs/layer/3.3.0/theme/default/layer.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div layout:fragment="content"></div>
+
+
+
+<!-- jQuery -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/webjars/jquery-ui/1.11.4/jquery-ui.min.js}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/webjars/bootstrap/4.6.0/js/bootstrap.bundle.min.js}"></script>
+<!-- overlayScrollbars -->
+<script th:src="@{/webjars/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js}"></script>
+
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/addrbar/bootstrap-table-addrbar.min.js"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/webjars/AdminLTE/3.1.0/dist/js/adminlte.min.js}"></script>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/layer/3.3.0/layer.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<!--<script th:src="@{/webjars/AdminLTE/3.1.0/dist/js/demo.js}"></script>-->
+
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    window.g = {
+        BASE_URL: /*[[@{/}]]*/ '',
+        getUrl: function (path) {
+            return this.BASE_URL + path;
+        }
+    }
+    /*]]>*/
+</script>
+<script layout:fragment="js" type="text/javascript" th:inline="javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-info">本页面展示当前帐号最近登录的10条历史记录</p>
+            <div class="timeline">
+                <div class="time-label">
+                    <span class="bg-red">[[${#dates.format(USER_LOGIN_LOGS[0].createdAt,'dd-MM-yyyy')}]]</span>
+                </div>
+
+                <th:block th:each="ull : ${USER_LOGIN_LOGS}">
+                    <div>
+                        <i class="fas fa-user bg-green"></i>
+                        <div class="timeline-item">
+                            <div class="timeline-body">
+                                [[${ull.region}]] [[${ull.ipAddress}]]<br/>
+                                [[${#dates.format(ull.createdAt,'yyyy-MM-dd HH:mm:ss')}]]<br/>
+                                <th:block th:if="${ull.loginStatus eq 'y'}"><span style="color: #4baf50">登录成功 (密码登录)</span></th:block>
+                                <th:block th:if="${ull.loginStatus eq 'n'}"><span style="color: #f14333">登录失败 : 帐号或者密码错误</span></th:block><br/>
+                                登录帐号: [[${ull.username}]]（Web 网页登录）<br/>
+                                [[${ull.userAgent}]]
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+                <div class="time-label">
+                    <span class="bg-green">[[${#dates.format(USER_LOGIN_LOGS[USER_LOGIN_LOGS.size-1].createdAt,'dd-MM-yyyy')}]]</span>
+                </div>
+
+                <div>
+                    <i class="fas fa-clock bg-gray"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

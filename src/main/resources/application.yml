@@ -1,11 +1,129 @@
+server:
+  port: 9000
+  servlet:
+    session:
+      cookie:
+        name: authorization-server-session-id
+        http-only: true
+        secure: true
 
-
+  error:
+    include-exception: on
+    include-binding-errors: on_param
+    include-message: on_param
+    include-stacktrace: on_param
 
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3306/test"
+    username: root
+    password: 123456
+  #  redis:
+#    redisson:
+#      config: |
+#        singleServerConfig:
+#          idleConnectionTimeout: 10000
+#          connectTimeout: 10000
+#          timeout: 3000
+#          retryAttempts: 3
+#          retryInterval: 1500
+#          subscriptionsPerConnection: 5
+#          clientName: test
+#          address: "redis://192.168.3.48:6379"
+#          password: "HomeRedisPwd.@123456"
+#          subscriptionConnectionMinimumIdleSize: 1
+#          subscriptionConnectionPoolSize: 50
+#          connectionMinimumIdleSize: 32
+#          connectionPoolSize: 64
+#          database: 0
+#          dnsMonitoringInterval: 5000
+#        threads: 0
+#        nettyThreads: 0
+#        codec: !<org.redisson.codec.JsonJacksonCodec> {}
+#        "transportMode": "NIO"
+  messages:
+    basename: i18n.messages
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:9000
+    password:
+      secret: "NFFCBJMOFFIVPZXDDXXHYHDFZ"
+  oauth2:
+    issuerUrl: "http://xxxxxx"
+#  mail:
+#    default-encoding: utf-8
+#    username: xxxx
+#    password: "xxx"
+#    host: xxxx
+#    properties:
+#      debug: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+  profiles:
+    active: local
+  application:
+    name: sneakydog-spring-authorization-server-demo
+    rsa:
+      publicKey: "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1ZkVLJ5qj/RrdRo+UOLbn/qjSEiRIGIC4ojidIydSyGNwBx/pi5f+KQsN54FvuPXQlm6+4p5tnjsqQhfrC50Pu4rT55606lhhspXeXP5Ka6QnnWELcSRcyLvWfXbCyeKbJFOSJQzTDyGQpb8e22McRcsRSwHjLnM4nwKfSiTjSQIDAQAB"
+      privateKey: "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALVmRUsnmqP9Gt1Gj5Q4tuf+qNISJEgYgLiiOJ0jJ1LIY3AHH+mLl/4pCw3ngW+49dCWbr7inm2eOypCF+sLnQ+7itPnnrTqWGGyld5c/kprpCedYQtxJFzIu9Z9dsLJ4pskU5IlDNMPIZClvx7bYxxFyxFLAeMuczifAp9KJONJAgMBAAECgYEAtWIE6cg5Fb7RLO8QRFqNcd6u+hcP1lNB6tyylVWATYN4Ap3tJ/7gRVDO7+FMCOW+TgsNw6sgVWXBrViXR/y91z0pEsLalwkOmMk4hDN/GfphL2yTzNMO1GqhAWJb1MYhtRdxyDB4RoNPwhg9eGJgdkWZQvT+o3wqoDH2ySc0zoECQQDfWFoijSBsAshfhH6o6rBGJt18ugR49i+u7FWtz7yZw0VFZEL96ji1MptOiz5g52hE8V/tIuo88iNDqhmMgKERAkEAz+vseGG7K3FZBf6Q6gZaacN1sb2jAl64kxNzIAVg5e5nsSGKgArf57R0yrGRTxcCY1IVKZBa7ZzlidJzAUieuQJBAKSgaFf9dH+JEY8uh3oU+3fKIApWxwMuW/lw5LqoXBlu0PmULLki00fklIuxoXomODpRPOb7jHL9/DZdBFYHXjECQFEwh+MuDn9VQHT1xbKMjouUFoY0Tc3kHODZjG/pib/fS0BAn6uGE46PybdIhTxD+Nu9tqPHSapVRNB/jAbpS4kCQFeK7Nc2b1mgOpprI7RePx0ccfqJLHSIraN3WGHGgRsM7l3jXDQSn1yIJEcfa2cRSaYkFIL6x3kexstTwmh3oKQ="
   thymeleaf:
+    cache: false
     enabled: true
+    encoding: utf-8
+    check-template-location: true
+  mvc:
+    log-request-details: true
+  session:
+    redis:
+      namespace: "spring:session"
+      cleanup-cron: "0 * * * * *"
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    create-schemas: true
+  artemis:
+    embedded:
+      data-directory:
+
+#arthas:
+#  agent-id: hsehdfsfghhwertyfad
+#  tunnel-server: ws://127.0.0.1:7777/ws
+
+
+mybatis:
+  mapper-locations: classpath:META-INF/sqlmap/**.xml
+  type-aliases-package: dog.sneaky.demo.database.dataobject
+  type-handlers-package: dog.sneaky.demo.database.typehandler
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+    cache-enabled: true
+
+pagehelper:
+  support-methods-arguments: true
+  params: count=countSql
+  reasonable: true
 
 
 logging:
   level:
-    "org.springframework.security": "debug"
+    root: info
+    org.springframework.web: debug
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+    org.springframework.security.jackson2.SecurityJackson2Modules: off
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

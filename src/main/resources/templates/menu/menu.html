@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Menus</title>
+    <link href="https://cdn.jsdelivr.net/npm/jquery-treegrid@0.3.0/css/jquery.treegrid.css" rel="stylesheet">
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>Menus Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="fixed-table-toolbar" id="toolbar">
+                <a class="btn btn-w-m btn-primary addnew" sec:authorize="hasAuthority('ROLE_USER_MENUS_ADD')" th:href="@{/user/menus/add}"><i class="fa fa-plus"></i>新增</a>
+            </div>
+            <table id="table">
+            </table>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="pagejs">
+    <script src="https://cdn.jsdelivr.net/npm/jquery-treegrid@0.3.0/js/jquery.treegrid.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
+</th:block>
+
+<script layout:fragment="js" th:inline="javascript">
+    var $table = $('#table')
+    $(function() {
+        $table.bootstrapTable({
+            url: '/user/menus',
+            toolbar: '#toolbar',
+            dataType: 'json',
+            method: 'POST',
+            singleSelect: true,         //设置是否单选
+            contentType: "application/x-www-form-urlencoded",//发送到服务器的数据编码类型
+            idField: 'menuId',
+            showColumns: true,
+            responseHandler: function (res) {
+                console.log(12313)
+                console.log(res)
+                if (res) {
+                    return res;
+                } else {
+                    return {
+                        rows: [],
+                        total: 0
+                    };
+                }
+            },
+            columns: [
+                {
+                    field: 'ck',
+                    checkbox: true
+                },
+                {
+                    field: 'menuName',
+                    title: 'menuName'
+                },
+                {
+                    field: 'url',
+                    title: 'url'
+                },
+                {
+                    field: 'perms',
+                    title: 'perms'
+                },
+                {
+                    field: 'visible',
+                    title: 'visible',
+                    sortable: true,
+                    align: 'center',
+                    formatter: 'statusFormatter'
+                },
+                {
+                    field: 'operate',
+                    valign: 'middle',
+                    align: 'center',
+                    formatter: 'operateFormatter'
+                },
+            ],
+            treeShowField: 'menuName',
+            parentIdField: 'parentId',
+            onPostBody: function() {
+                var columns = $table.bootstrapTable('getOptions').columns
+                if (columns && columns[0][1].visible) {
+                    $table.treegrid({
+                        treeColumn: 1,
+                        onChange: function() {
+                            $table.bootstrapTable('resetView')
+                        }
+                    })
+                }
+            }
+        })
+    })
+
+    function typeFormatter(value, row, index) {
+        if (value === 'menu') {
+            return '菜单'
+        }
+        if (value === 'button') {
+            return '按钮'
+        }
+        if (value === 'api') {
+            return '接口'
+        }
+        return '-'
+    }
+
+    function statusFormatter(value, row, index) {
+        if (value === 1) {
+            return '<span class="label label-success">正常</span>'
+        }
+        return '<span class="label label-default">锁定</span>'
+    }
+
+    function operateFormatter(value, row, index) {
+        if([[${#authorization.expression('hasAuthority("ROLE_USER_MENUS_EDIT")')}]]) {
+            return [ '<a href="/user/menus/'+row.menuId+'" class="btn btn-sm btn-secondary" title="修改权限"><i class="fas fa-edit"></i></a>',].join('');
+        }
+    }
+
+</script>
+
+</body>
+</html>

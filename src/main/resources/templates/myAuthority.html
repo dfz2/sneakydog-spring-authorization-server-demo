@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>My Authority Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <form th:action="@{#}" method="post" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label for="roleName" class="col-sm-2 col-form-label text-right">RoleName</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  id="roleName" placeholder="Role Name">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="remark" class="col-sm-2 col-form-label text-right">Remark</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  id="remark" placeholder="Remark">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

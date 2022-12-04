@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>My APP</title>
+    <style>
+        .callout {
+            border-radius: .25rem;
+            background-color: #fff;
+            /*border: 1px solid #eee;*/
+            /*border-left-width: .25rem;*/
+            border-left: 5px solid #e9ecef;
+            box-shadow: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>My APP Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+
+                    <form th:action="@{/registered/clients/secret/reset}" method="post" class="form-horizontal" id="resetClientSecretForm">
+
+                        <div class="form-group row">
+                            <div class="callout callout-danger ml-5">
+                                <h5>I am a danger callout!</h5>
+                                <p class="text-danger">1.出于安全考虑，ClientSecret不再被明文保存，忘记密钥请点击[Reset Client Secret]重置。
+                                    <br/>2.牢记clientId和ClientSecret。
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="ClientId" class="col-sm-3 col-form-label text-right">ClientId</label>
+                            <div class="col-sm-6">
+                                <p class="form-control-plaintext text-info"
+                                   th:text="${registeredClientsDTO.clientId}"></p>
+                                <input type="hidden" name="clientId" id="clientId"
+                                       th:value="${registeredClientsDTO.clientId}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="clientSecret" class="col-sm-3 col-form-label text-right">ClientSecret</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="clientSecret" name="clientSecret"
+                                       placeholder="New Client Secret" autocomplete="off">
+                                <p class="text-danger">出于安全考虑,ClientSecret不再被明文保存,忘记密钥请点击[Reset Client Secret]重置.</p>
+                                <span for="clientSecret"
+                                      class="error invalid-feedback"
+                                      style="display: none;">Please enter a New Client Secret.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password" class="col-sm-3 col-form-label text-right">Current Login PWD</label>
+                            <div class="col-sm-6">
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Current Login PWD" autocomplete="off">
+                                <span for="password"
+                                      class="error invalid-feedback"
+                                      style="display:none;">Please enter a Current Login PWD.</span>
+                            </div>
+                            <div class="col-sm-2">
+                                  <p class="text-danger" th:if="${onErrorMessage != nul}"  th:text="${onErrorMessage}"></p>
+                            </div>
+                        </div>
+
+                        <hr sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')"/>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label text-right"></label>
+                            <div class="col-sm-6">
+                                <button sec:authorize="hasAuthority('ROLE_MY_APP')" type="submit" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#resetClientSecretModal"
+                                        id="submitBtn">Reset Client Secret
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="pagejs">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/additional-methods.min.js"></script>
+</th:block>
+
+<script layout:fragment="js">
+    $(function () {
+
+        $.validator.setDefaults({
+            submitHandler: function (form) {
+                loading('submitBtn');
+                form.submit();
+            }
+        });
+
+        $('#resetClientSecretForm').validate({
+            rules: {
+                "password": {
+                    required: true,
+                },
+                "clientSecret": {
+                    required: true,
+                },
+            },
+            messages: {
+                "password": {
+                    required: "Please enter a Current Login PWD.",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.input-group,.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+
+
+        function loading(elid) {
+            var el = $("#" + elid);
+            el.prop("disabled", true);
+            el.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submit...`);
+        }
+    });
+</script>
+
+</body>
+</html>

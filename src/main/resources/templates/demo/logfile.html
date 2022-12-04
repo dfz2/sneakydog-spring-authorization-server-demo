@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>logs Demo Modal Examples</title>
+    <link rel="stylesheet" th:href="@{/css/ztree.css}">
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>logs Demo Modal Examples
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="logs" id="console" style="height: 700px;overflow: auto">
+
+                        12313123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="pagejs">
+   <script th:src="@{/js/ansi_up.js}"></script>
+</th:block>
+<script layout:fragment="js" th:inline="javascript">
+    $(function () {
+        // $(".logs").load("/actuator/logfile");
+        let initialSize = 300 * 1024
+        let range = `bytes=-${initialSize}`;
+        let size = 0
+        let ansi_up = new AnsiUp();
+        var cdiv = document.getElementById("console");
+
+        setInterval(() => {
+            $.ajax({
+                headers: {
+                    // 'Range': range,
+                    'Accept': 'text/plain'
+                },
+                url: "/actuator/logfile",
+                async: false,
+                success: function (res, statusText, xhr) {
+                    console.log(statusText)
+                    console.log(xhr)
+
+                    // const initial = size === 0;
+                    // const contentLength = res.length;
+                    //
+                    // if (xhr.status === 200) {
+                    //     if (!initial) {
+                    //         throw 'Expected 206 - Partial Content on subsequent requests.';
+                    //     }
+                    //     size = contentLength;
+                    // } else if (xhr.status === 206) {
+                    //     const contentRange = xhr.getResponseHeader('content-range');
+                    //     size = parseInt(contentRange.split('/')[1]);
+                    // } else {
+                    //     throw 'Unexpected response status: ' + xhr.status;
+                    // }
+
+                    // Reload the last byte to avoid a 416: Range unsatisfiable.
+                    // If the response has length = 1 the file hasn't beent changed.
+                    // If the response status is 416 the logfile has been truncated.
+                    // range = `bytes=${size - 1}-`;
+
+                    var html =  ansi_up.ansi_to_html(res)
+                    // $('.logs').innerHTML(ansi_up.ansi_to_html(res));
+
+
+                    cdiv.innerHTML = html;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+
+                },
+                error: function () {
+                }
+            })
+        }, 10000)
+
+
+    });
+
+</script>
+</body>
+</html>

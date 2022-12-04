@@ -1,21 +1,219 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="author" content="test">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="This is a login page template based on Bootstrap 5">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Bootstrap 5 Login Page</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        if (window !== top) {
+            top.location.href = location.href;
+        }
+    </script>
+
+
 </head>
+
 <body>
 
-<div id="app">
+<section class="h-100">
+    <div class="container h-100">
+        <div class="row justify-content-sm-center h-100">
+            <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+                <div class="text-center my-5">
+                    <img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="logo" width="100">
+                </div>
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h1 class="fs-4 card-title fw-bold mb-4">Login</h1>
 
-</div>
-<!-- 如果是在开发环境中 -->
-<script type="module" src="http://127.0.0.1:5173/@vite/client"></script>
-<script type="module" src="http://127.0.0.1:5173/src/main.ts"></script>
+                        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                            Invalid username and password.
+                        </div>
+
+                        <div th:if="${param.maximumSessions}" class="alert alert-danger" role="alert">
+                            被迫下线.
+                        </div>
+                        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                            You have been logged out.
+                        </div>
+
+
+                        <form method="POST" th:action="@{/login}" id="myform" name="f" class="needs-validation"
+                              novalidate="" autocomplete="off">
+
+<!--                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                            <!--                            <input type="hidden" name="password" id="password">-->
+                            <input type="hidden" id="_satoken" th:value="${publicKey}">
+                            <div class="mb-3 form-group">
+                                <label class="mb-2 text-muted" for="username">E-Mail Address</label>
+                                <input id="username" type="email" class="form-control" name="customerDTO[username]" required
+                                       autofocus autocomplete="off">
+                            </div>
+
+                            <div class="mb-3 form-group">
+                                <div class="mb-2 w-100">
+                                    <label class="text-muted" for="password2">Password</label>
+                                    <a th:href="@{/forgot}" class="float-end">
+                                        Forgot Password?
+                                    </a>
+                                </div>
+                                <input type="hidden" id="npassword" name="customerDTO[password]">
+                                <input id="password2" type="password" class="form-control" required autocomplete="off">
+                            </div>
+
+                            <div class="d-flex align-items-center form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" name="customerDTO[remember]" id="remember" class="form-check-input">
+                                    <label for="remember" class="form-check-label">Remember Me</label>
+                                </div>
+                                <button type="submit" id="loginBtn" value="Login" class="btn btn-primary ms-auto submit">
+                                    Login
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer py-3 border-0">
+                        <div class="text-center">
+                            Don't have an account? <a th:href="@{/register}" class="text-dark">Create One</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-5 text-muted">
+                    Copyright &copy; 2021-[[${#dates.format(new java.util.Date().getTime(), 'yyyy')}]] &mdash; Your
+                    Company
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.1.0/jsencrypt.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+<script src="js/login.js" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    /*<![CDATA[*/
+    var baseURL = /*[[@{/}]]*/ '';
+    /*]]>*/
+
+
+    $(function () {
+
+        // $("#liveToastBtn").click(function () {
+        //     $('.toast').toast('show');
+        // });
+
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey($('#_satoken').val());
+
+        $('#password2').blur(function (){
+            var npassword = encrypt.encrypt($('#password2').val());
+            $("#npassword").val(npassword);
+        })
+
+        // $('#loginBtn').click(function () {
+        //     buttonLoading("loginBtn");
+        // });
+
+        //
+        //
+        // $("#myform").validate({
+        //     errorElement: 'span',
+        //     errorClass: 'invalid-feedback',
+        //     rules: {
+        //         username: {
+        //             required: true,
+        //             email: true
+        //         },
+        //         password: {
+        //             required: true,
+        //         },
+        //     },
+        //     //自定义错误消息放到哪里
+        //     errorPlacement: function (error, element) {
+        //         element.next().remove();//删除显示图标
+        //         element.after('<span class="glyphicon glyphicon-remove invalid-feedback" aria-hidden="true"></span>');
+        //         // element.closest('.invalid-feedback').append(error);//显示错误消息提示
+        //         element.closest('.form-group').append(error);//显示错误消息提示
+        //     },
+        //     //给未通过验证的元素进行处理
+        //     highlight: function (element) {
+        //         // $(element).closest('.form-group').addClass('has-error has-feedback');
+        //         $(element).closest('.needs-validation').addClass('was-validated');
+        //     },
+        //     //验证通过的处理
+        //     success: function (label) {
+        //         // var el = label.closest('.form-group').find("input");
+        //         // el.next().remove();//与errorPlacement相似
+        //         // el.after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>');
+        //         // label.closest('.form-group').removeClass('has-error').addClass("has-feedback has-success");
+        //         // label.remove();
+        //         var el = label.closest('.form-group').find("input");
+        //         el.next().remove();//与errorPlacement相似
+        //         el.after('<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>');
+        //         label.closest('.needs-validation').removeClass('was-validated').addClass("was-validated");
+        //         label.remove();
+        //     },
+        //     submitHandler: function (form) {
+        //         loginForm();
+        //     }
+        // });
+
+
+        // function loginForm() {
+        //     buttonLoading("loginBtn");
+        //     var npassword = encrypt.encrypt($('#password2').val());
+        //     $.ajax({
+        //         type: "POST",
+        //         url: baseURL + "login",
+        //         dataType: "json",
+        //         data: {
+        //             "_satoken": $('#_satoken').val(),
+        //             username: $('#username').val(),
+        //             password: npassword
+        //         },
+        //         xhrFields: {
+        //             withCredentials: true
+        //         },
+        //         success: function (data) {
+        //             console.log(data)
+        //             if (data && data.returnUrl) {
+        //                 location.replace(data.returnUrl);
+        //             }
+        //         },
+        //         complete: function (xhr, status) {
+        //             console.log(xhr);
+        //             console.log(status)
+        //             closeButtonLoading("loginBtn");
+        //             if (xhr.status === 9527) {
+        //
+        //             }
+        //         }
+        //     });
+        // }
+
+
+        function buttonLoading(elid) {
+            var el = $("#" + elid);
+            el.prop("disabled", true);
+            el.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`);
+        }
+
+        function closeButtonLoading(elid) {
+            var el = $("#" + elid);
+            el.prop("disabled", false);
+            $("#loginBtn").html(el.val());
+        }
+
+    });
+</script>
 </body>
-
-
-
 </html>

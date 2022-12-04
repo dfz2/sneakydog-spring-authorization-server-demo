@@ -1,0 +1,42 @@
+server:
+  port: 9001
+  servlet:
+    session:
+      cookie:
+        name: authorization-server-session-id
+        secure: false
+
+spring:
+  security:
+    username: "test1@yeah.net"
+    password: "sneakydogTestPasswod12"
+  captcha:
+    enabled: false
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: utf-8
+    check-template-location: true
+  application:
+    domain: http://localhost:9001
+    name: sneakydog-spring-authorization-server-demo
+  mvc:
+    log-request-details: true
+
+
+
+logging:
+  file:
+    path: ./logs
+  level:
+    root: info
+    org.springframework.web: debug
+    org.springframework.security: debug
+    org.springframework.security.oauth2: debug
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

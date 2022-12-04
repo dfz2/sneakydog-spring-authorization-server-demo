@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>AdminLTE 3 | Registration Page</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcdn.net/ajax/libs/icheck-bootstrap/3.0.1/icheck-bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/webjars/AdminLTE/3.1.0/dist/css/adminlte.min.css}">
+  <style>
+    .CAPTCHACode span{
+      padding-left: 9px;
+    }
+  </style>
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a href="#"><b>Admin</b>LTE</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">Register a new membership</p>
+
+      <form th:action="@{/register}" method="POST" id="regForm">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" name="registerDTO.nickname" maxlength="50" placeholder="Full name" autocomplete="off">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" id="email" name="username" maxlength="50" placeholder="Email" autocomplete="off">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3 CAPTCHACode">
+          <div class="col-6">
+            <input type="text" id="CAPTCHACode" name="CAPTCHACode" maxlength="6" class="form-control"  placeholder="CAPTCHA" autocomplete="off">
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-primary btn-block CAPTCHACodeSendEmail">Send Email</button>
+          </div>
+        </div>
+
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" id="password" name="registerDTO.password" maxlength="25" placeholder="Password" autocomplete="off">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" name="registerDTO.retypePassword" maxlength="25" placeholder="Retype password" autocomplete="off">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="agreeTerms" name="registerDTO.terms" value="agree">
+              <label for="agreeTerms">
+               I agree to the <a th:href="@{/terms/privacy.html}">terms</a>
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Register</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <div class="social-auth-links text-center">
+        <p>- OR -</p>
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fab fa-facebook mr-2"></i>
+          Sign up using Facebook
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fab fa-google-plus mr-2"></i>
+          Sign up using Google+
+        </a>
+      </div>
+
+      <a th:href="@{/login.html}" class="text-center">I already have a membership</a>
+    </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+<!-- /.register-box -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.0-beta3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/additional-methods.min.js"></script>
+<script th:src="@{/webjars/AdminLTE/3.1.0/dist/js/adminlte.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script>
+  $(function (){
+
+      $.validator.setDefaults({
+          submitHandler: function (form) {
+              console.log("Form successful submitted!");
+              loading('submitBtn');
+              form.submit();
+          }
+      });
+
+      $('#regForm').validate({
+          rules: {
+              "registerDTO.nickname": {
+                  required: true,
+                  maxlength: 50
+              },
+              "username": {
+                  required: true,
+                  email: true,
+                  maxlength: 50,
+                  remote: "/checkEmail.html"
+              },
+              "CAPTCHACode": {
+                  required: true,
+                  minlength: 6,
+                  maxlength: 6,
+                  remote: {
+                      url: "/checkCAPTCHA.html",
+                      type: "POST",
+                      data: {
+                          CAPTCHACode: function () {
+                              return $("#CAPTCHACode").val();
+                          },
+                          username: function () {
+                              return $("#email").val();
+                          },
+                      }
+                  }
+              },
+              "registerDTO.password": {
+                  required: true,
+                  minlength: 16,
+                  maxlength: 25
+              },
+              "registerDTO.retypePassword": {
+                  required: true,
+                  minlength: 16,
+                  maxlength: 25,
+                  equalTo: "#password"
+              },
+              "registerDTO.terms": {
+                  isAgreeTerms: true,
+              }
+          },
+          messages: {
+              "registerDTO.nickname": {
+                  required: "Please enter a nickname.",
+              },
+              "username": {
+                  required: "Please enter a email address.",
+                  email: "Please enter a vaild email address.",
+                  remote: "email address conflict."
+              },
+              "CAPTCHACode": {
+                  required: "Please enter a CAPTCHA Code.",
+                  email: "Your CAPTCHA Code must be 6 characters long.",
+                  remote: 'CAPTCHA Error.'
+              },
+          },
+          errorElement: 'span',
+          errorPlacement: function (error, element) {
+              error.addClass('invalid-feedback');
+              if (element.is(':radio') || element.is(':checkbox')) { // 如果是radio或checkbox
+                  var eid = element.attr('name'); // 获取元素的name属性
+                  error.appendTo(element.parent()); // 将错误信息添加当前元素的父结点后面
+              } else {
+                  element.closest('.input-group,.CAPTCHACode').append(error);
+              }
+          },
+          highlight: function (element, errorClass, validClass) {
+              $(element).addClass('is-invalid');
+          },
+          unhighlight: function (element, errorClass, validClass) {
+              $(element).removeClass('is-invalid');
+          }
+      });
+
+      jQuery.validator.addMethod("isAgreeTerms", function (value, element) {
+          return element.checked;
+      }, "Please checked terms.");
+
+      $('.CAPTCHACodeSendEmail').click(function () {
+          if ($("#regForm").validate().element($("#email"))) {
+              // send email
+              sendEmailCountdown(this);
+              sendEmailCAPTCHA();
+              return true;
+          } else {
+              return false;
+          }
+      });
+
+      let wait = 120;
+
+      function sendEmailCountdown(element) {
+          var thiz = $(element);
+          if (wait === 0) {
+              thiz.removeAttr("disabled").text("Send Email");
+              wait = 120;
+          } else {
+              thiz.prop("disabled", "true").html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${wait} s`);
+              wait--;
+              setTimeout(()=>sendEmailCountdown(element), 1000)
+          }
+      }
+
+      function sendEmailCAPTCHA() {
+          $.ajax({
+              url: "/sendEmailCAPTCHA.html",
+              type: "POST",
+              dataType: "json",
+              // contentType: "application/json; charset=UTF-8",
+              async: false,
+              processData: true,
+              xhrFields: {
+                  withCredentials: true
+              },
+              data: {
+                  "checkCAPTCHADTO.username": $("#email").val(),
+              },
+              success: function (res) {
+                  if (!res) {
+                      alert("System Error, Try Again Later.");
+                  }
+              }
+          });
+      }
+
+      function loading(elid) {
+          var el = $("#" + elid);
+          el.prop("disabled", true);
+          el.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> reg...`);
+      }
+
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  sneakydog-oauth21:
+    container_name: "sneakydog_oauth2_8081"
+    image: "sneakydog-oauth2-demo:latest"
+    ports:
+      - "8989:9000"
+
+networks:
+  default:
+    external:
+      name: sneakydog_network_bridge

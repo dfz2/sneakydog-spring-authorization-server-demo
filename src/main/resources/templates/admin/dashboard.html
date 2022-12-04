@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div layout:fragment="content">
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Blank Page</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Blank Page</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Content Header (Page header) -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Title</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row" style="padding-bottom: 10px;">
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-3">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-4">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-5">
+                        </div>
+
+                        <div class="col-3">
+                            <button class="btn btn-secondary">search</button>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-bottom: 10px;">
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-3">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-4">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder=".col-5">
+                        </div>
+
+                        <div class="col-3">
+                            <button class="btn btn-secondary">search</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.card -->
+        </section>
+        <!-- /.content -->
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Title</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="fixed-table-toolbar" id="toolbar">
+                        <button class="btn btn-w-m btn-primary" data-toggle="modal"><i class="fa fa-plus"></i> 新增
+                        </button>
+                        <button class="btn btn-w-m btn-primary" data-toggle="modal">新增</button>
+                        <button class="btn btn-w-m btn-primary" data-toggle="modal">新增</button>
+                    </div>
+
+                    <table id="table">
+                    </table>
+
+
+                </div>
+                <!-- /.card-body -->
+                <!--            <div class="card-footer">-->
+                <!--                Footer-->
+                <!--            </div>-->
+                <!-- /.card-footer-->
+            </div>
+            <!-- /.card -->
+        </section>
+        <!-- /.content -->
+
+
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+
+
+<script layout:fragment="js">
+    $(function () {
+        $('#table').bootstrapTable({
+            url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+            toolbar: '#toolbar',
+            dataType: 'json',
+            method: 'post',
+            contentType: "application/x-www-form-urlencoded",//发送到服务器的数据编码类型
+            pagination: true,            //是否显示分页
+            pageSize: 10,                //设置每页的记录行数
+            pageNumber: 1,               //设置首页页码
+            singleSelect: false,         //设置是否单选
+            checkboxHeader: true,
+            clickToSelect: true,
+            search: true,
+            showSearchButton: true,
+            showRefresh: true,   //是否显示刷新按钮
+            showToggle: false,    //是否显示详细视图和列表视图的切换按钮
+            showColumns: true,   //选择要显示的列
+            striped: true,      //是否显示行间隔色
+            catch: true,                //禁用AJAX数据缓存
+            sidePagination: "server",    //服务端处理分页
+            queryParamsType: "undefined",//设置参数格式
+            queryParams: function queryParams(params) {//设置查询参数
+                return {
+                    pageNum: params.pageNumber,
+                    pageSize: params.pageSize
+                };
+            },
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    title: 'id',
+                    field: 'id',
+                    valign: 'middle'
+                }, {
+                    title: 'name',
+                    field: 'name',
+                    valign: 'middle'
+                }
+                , {
+                    title: 'price',
+                    field: 'price',
+                    valign: 'middle'
+                }
+            ]
+
+        });
+    })
+</script>
+
+</body>
+</html>
