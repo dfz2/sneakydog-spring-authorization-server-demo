@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserLoginedEventListener {
     private final LogsDAO logsDAO;
 
-    @EventListener
+//    @EventListener
     // 可以使用 AuthenticationSuccessEvent
     public void userLoginedEvent(UserLoginedEvent userLoginedEvent) {
         LogsDO logs = new LogsDO();

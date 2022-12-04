@@ -1,4 +1,4 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.configuration;
 
 import dog.sneaky.demo.common.util.RSAUtil;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,5 +1,7 @@
 package dog.sneaky.demo.database.repository;
 
+import dog.sneaky.demo.data.eneity.CustomUser;
+import dog.sneaky.demo.data.repository.CustomUserRepository;
 import dog.sneaky.demo.database.dao.MyAuthorityDAO;
 import dog.sneaky.demo.database.dao.MyUserDAO;
 import dog.sneaky.demo.database.dao.UserRoleDAO;
@@ -11,17 +13,18 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
-@Repository
-public class UserRepositoryImpl implements UserRepository {
+//@Repository
+public class UserRepositoryImpl  {
     private final MyUserDAO myUserDAO;
     private final MyAuthorityDAO myAuthorityDAO;
     private final UserRoleDAO userRoleDAO;
 
-    @Override
+//    @Override
     public User loadUserByUsername(String username) {
         MyUserDO myUser = myUserDAO.loadByUsername(username);
         if (myUser != null) {
@@ -40,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    @Override
+//    @Override
     public void save(User user) {
         MyUserDO myUser = new MyUserDO();
         myUser.setUsername(user.getUsername());
@@ -53,4 +56,5 @@ public class UserRepositoryImpl implements UserRepository {
         userRole.setRoleId(2L);
         userRoleDAO.insert(userRole);
     }
+
 }
