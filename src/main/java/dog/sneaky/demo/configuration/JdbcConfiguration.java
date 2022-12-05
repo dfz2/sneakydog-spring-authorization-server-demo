@@ -3,22 +3,18 @@ package dog.sneaky.demo.configuration;
 
 import dog.sneaky.demo.data.AbstractEntity;
 import dog.sneaky.demo.data.BaseRepositoryImpl;
+import io.vavr.control.Option;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
-import org.springframework.data.relational.core.conversion.DbAction;
 import org.springframework.data.relational.core.mapping.event.BeforeConvertCallback;
-import org.springframework.data.relational.core.mapping.event.BeforeSaveCallback;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Configuration
 @EnableJdbcAuditing(auditorAwareRef = "auditorAwareRef")
@@ -37,16 +33,16 @@ public class JdbcConfiguration {
 
     @Bean
     public BeforeConvertCallback<AbstractEntity> beforeConvertCallbackRef() {
-        return JdbcConfiguration::onBeforeConvert;
+        return aggregate -> {
+            aggregate.setId(Option.of(aggregate.getId()).getOrElse(1121211L));
+            return aggregate;
+        };
     }
 
-    private static AbstractEntity onBeforeConvert(AbstractEntity aggregate) {
-        if (aggregate.getId() != null) {
-            return aggregate;
-        }
 
-        aggregate.setId(11111L);
-        return aggregate;
+    public static void main(String[] args) {
+        Object orElse = Option.of("test").getOrElse("1231313");
+        System.out.println(orElse);
     }
 
 }
