@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        CustomUser customUser = customUserRepository.findCustomUserByUsername(username);
+        CustomUser customUser = customUserRepository.loadUserByUsername(username);
         if (ObjectUtils.isEmpty(customUser)){
             log.error("用户["+username+"]不存在");
             throw new UsernameNotFoundException("123131");

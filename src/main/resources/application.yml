@@ -90,13 +90,7 @@ spring:
   artemis:
     embedded:
       data-directory:
-  jpa:
-    show-sql: true
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
 
 #arthas:
 #  agent-id: hsehdfsfghhwertyfad
@@ -124,7 +118,8 @@ pagehelper:
 
 logging:
   level:
-    org.springframework.security: debug
+    "org.springframework.security": debug
+    "org.springframework.jdbc.core": trace
 
 
 management:

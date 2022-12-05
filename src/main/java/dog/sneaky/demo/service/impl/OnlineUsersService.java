@@ -2,8 +2,6 @@ package dog.sneaky.demo.service.impl;
 
 
 import dog.sneaky.demo.userinterface.controller.dto.OnlineUsersDTO;
-import dog.sneaky.demo.database.dao.LogsDAO;
-import dog.sneaky.demo.database.dataobject.LogsDO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,7 +16,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class OnlineUsersService {
     private final StringRedisTemplate stringRedisTemplate;
-    private final LogsDAO logsDAO;
 
     public OnlineUsersDTO listOnlineUsers(){
         Set<String> sessionIds = stringRedisTemplate.keys("spring:session:index:org.springframework.session.FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME:*");
@@ -27,13 +24,13 @@ public class OnlineUsersService {
             List<OnlineUsersDTO> onlineUsersDTOS = new ArrayList<>();
             for (String sessionId : sessionIds) {
                 String username = sessionId.replace("spring:session:index:org.springframework.session.FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME:", "");
-                LogsDO logs = logsDAO.loadLoginedByUsername(username);
+//                LogsDO logs = logsDAO.loadLoginedByUsername(username);
                 OnlineUsersDTO obj = new OnlineUsersDTO();
-                obj.setUsername(logs.getUsername());
-                obj.setIpAddress(logs.getIpAddress());
-                obj.setCreatedAt(logs.getCreatedAt());
-                obj.setUserAgent(logs.getUserAgent());
-                obj.setRegion(logs.getRegion());
+//                obj.setUsername(logs.getUsername());
+//                obj.setIpAddress(logs.getIpAddress());
+//                obj.setCreatedAt(logs.getCreatedAt());
+//                obj.setUserAgent(logs.getUserAgent());
+//                obj.setRegion(logs.getRegion());
                 onlineUsersDTOS.add(obj);
             }
             onlineUsersDTO.setRows(onlineUsersDTOS);

@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,7 +55,7 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class DefaultSecurityConfiguration {
-    @Autowired
+    @Resource
     private MyUserDetailServiceImpl myUserDetailService;
     //
     @Value("${spring.application.rsa.privateKey}")
