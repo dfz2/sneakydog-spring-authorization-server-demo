@@ -2,6 +2,7 @@ package dog.sneaky.demo.data;
 
 
 import lombok.Data;
+import lombok.With;
 import org.springframework.data.annotation.*;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.time.Instant;
 @Data
 public abstract class AbstractEntity implements Serializable  {
     @Id
+    @With
     private Long id;
     @CreatedDate
     private Instant createdAt;

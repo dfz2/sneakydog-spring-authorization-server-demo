@@ -33,10 +33,7 @@ public class JdbcConfiguration {
 
     @Bean
     public BeforeConvertCallback<AbstractEntity> beforeConvertCallbackRef() {
-        return aggregate -> {
-            aggregate.setId(Option.of(aggregate.getId()).getOrElse(1121211L));
-            return aggregate;
-        };
+        return aggregate -> aggregate.withId(Option.of(aggregate.getId()).getOrElse(1121211L));
     }
 
 
