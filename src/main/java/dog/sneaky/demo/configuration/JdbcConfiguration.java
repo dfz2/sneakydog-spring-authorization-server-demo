@@ -37,12 +37,16 @@ public class JdbcConfiguration {
 
     @Bean
     public BeforeConvertCallback<AbstractEntity> beforeConvertCallbackRef() {
-        return aggregate -> {
-            if (aggregate.getId() == null) {
-                aggregate.setId(11111L);
-            }
+        return JdbcConfiguration::onBeforeConvert;
+    }
+
+    private static AbstractEntity onBeforeConvert(AbstractEntity aggregate) {
+        if (aggregate.getId() != null) {
             return aggregate;
-        };
+        }
+
+        aggregate.setId(11111L);
+        return aggregate;
     }
 
 }
