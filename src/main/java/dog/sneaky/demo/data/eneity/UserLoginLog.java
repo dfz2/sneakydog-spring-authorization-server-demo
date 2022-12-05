@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Getter
 @Setter
 @Table("logs")
-public class UserLoginLog  extends AbstractEntity<Long> {
+public class UserLoginLog  extends AbstractEntity {
 
 
     private String username;

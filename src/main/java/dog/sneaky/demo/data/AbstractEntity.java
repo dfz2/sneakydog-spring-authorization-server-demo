@@ -3,10 +3,8 @@ package dog.sneaky.demo.data;
 
 import lombok.Data;
 import org.springframework.data.annotation.*;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.support.IsNewStrategy;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 
@@ -16,9 +14,9 @@ import java.time.Instant;
  * @author dfz
  */
 @Data
-public abstract class AbstractEntity<T> implements Persistable<T> {
+public abstract class AbstractEntity implements Serializable  {
     @Id
-    private T id;
+    private Long id;
     @CreatedDate
     private Instant createdAt;
     @CreatedBy
@@ -30,12 +28,17 @@ public abstract class AbstractEntity<T> implements Persistable<T> {
     @Version
     private Integer version;
 
-
-
-
-    @Transient
-    @Override
-    public final boolean isNew() {
-        return true;
-    }
+//    @Transient
+//    @JsonIgnore
+//    private boolean newEntity = true;
+//
+//    public void setNew(boolean newInstance) {
+//        this.newEntity = newInstance;
+//    }
+//
+//    @JsonIgnore
+//    @Override
+//    public final boolean isNew() {
+//        return this.newEntity;
+//    }
 }
