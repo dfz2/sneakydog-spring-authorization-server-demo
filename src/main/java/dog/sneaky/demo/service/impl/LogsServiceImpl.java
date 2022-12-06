@@ -21,7 +21,7 @@ public class LogsServiceImpl implements LogsService {
     public List<UserLoginLog> listLogs() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        List<UserLoginLog> userLoginLogs = userLoginLogRepository.listTop10ByUsername(username);
+        List<UserLoginLog> userLoginLogs = userLoginLogRepository.getTop10ByUsernameOrderByCreatedAtDesc(username);
         return userLoginLogs;
 //        return logsDAO
 //                .listLogsByUsername(username)

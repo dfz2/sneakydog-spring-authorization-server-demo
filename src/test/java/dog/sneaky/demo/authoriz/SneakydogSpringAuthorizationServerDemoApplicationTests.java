@@ -87,7 +87,7 @@ class SneakydogSpringAuthorizationServerDemoApplicationTests {
     @Test
     void contextLoads() {
         System.out.println(passwordEncoder.encode("sneakydogTestPasswod12"));
-        System.out.println(passwordEncoder.encode("123456"));
+//        System.out.println(passwordEncoder.encode("123456"));
     }
 
 
