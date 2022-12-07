@@ -137,6 +137,8 @@ public class DefaultSecurityConfiguration {
 
         http.authorizeHttpRequests(a -> a.requestMatchers("/login/**", "/login.html",
                         "/register.html",
+                        "/reg.html",
+                        "/reg",
                         "/register",
                         "/js/*.js", "/favicon.ico", "/img/**", "/error**", "/webjars/**",
                         "/redission/**",
