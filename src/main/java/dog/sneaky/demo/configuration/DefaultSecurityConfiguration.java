@@ -57,9 +57,7 @@ import java.util.UUID;
 public class DefaultSecurityConfiguration {
     @Resource
     private MyUserDetailServiceImpl myUserDetailService;
-    //
-    @Value("${spring.application.rsa.privateKey}")
-    private String privateKey;
+
 
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
@@ -131,7 +129,7 @@ public class DefaultSecurityConfiguration {
 ////                .jwt();
 
 
-        MyDaoAuthenticationProvider authenticationProvider = new MyDaoAuthenticationProvider(privateKey);
+        MyDaoAuthenticationProvider authenticationProvider = new MyDaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(myUserDetailService);
         http.authenticationProvider(authenticationProvider);
 
@@ -157,6 +155,7 @@ public class DefaultSecurityConfiguration {
 //                "/actuator/**",
                         "/favicon.ico").permitAll().anyRequest().authenticated())
                 .formLogin(l -> l.loginPage("/login")
+                                .authenticationDetailsSource(new CustomWebAuthenticationDetailsSource())
                                 .usernameParameter("j_username")
                                 .passwordParameter("j_password")
 //                        .successHandler(new Custom2UrlAuthenticationSuccessHandler(applicationContext))

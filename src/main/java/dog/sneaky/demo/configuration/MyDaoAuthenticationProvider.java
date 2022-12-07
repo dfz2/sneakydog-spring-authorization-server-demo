@@ -15,11 +15,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
-    private final String privateKey;
-    public MyDaoAuthenticationProvider(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
     @Override
     protected void additionalAuthenticationChecks(
             UserDetails userDetails,
@@ -40,9 +35,10 @@ public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
         HttpServletRequest request =  servletRequestAttributes.getRequest();
         HttpSession httpSession = request.getSession();
 
+        String publicKey = request.getParameter("_satoken");
         String uuid = request.getParameter("uuid");
-        String privatekey =  (String) httpSession.getAttribute("privatekey" + uuid);
-        httpSession.removeAttribute("privatekey" + uuid);
+        String privatekey =  (String) httpSession.getAttribute(publicKey);
+        httpSession.removeAttribute(publicKey);
 
         String presentedPassword = authentication.getCredentials().toString();
         try {

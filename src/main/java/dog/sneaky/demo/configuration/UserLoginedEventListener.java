@@ -6,6 +6,7 @@ import dog.sneaky.demo.data.eneity.UserLoginLog;
 import dog.sneaky.demo.data.repository.UserLoginLogRepository;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.FacesRequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -29,21 +32,27 @@ public class UserLoginedEventListener {
 
     @Async
     @EventListener
-    public void test(InteractiveAuthenticationSuccessEvent interactiveAuthenticationSuccessEvent) {
+    public void loginSuccessEvent(InteractiveAuthenticationSuccessEvent interactiveAuthenticationSuccessEvent) {
 
         System.out.println(interactiveAuthenticationSuccessEvent);
 
         Authentication authentication = interactiveAuthenticationSuccessEvent.getAuthentication();
-//        ServletRequestAttributes ra= (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        HttpServletRequest request =  ra.getRequest();
-//        String remoteAddr = IPUtil.getClientIP(request);
-//        String region = IPUtil.getAddressByIP(remoteAddr);
+        CustomWebAuthenticationDetails customWebAuthenticationDetails = (CustomWebAuthenticationDetails) authentication.getDetails();
+//        HttpServletRequest httpServletRequest = customWebAuthenticationDetails.getHttpServletRequest();
+//
+
+        Map<String, Object> headers = customWebAuthenticationDetails.getHeaders();
+        String remoteAddress = customWebAuthenticationDetails.getRemoteAddress();
+        String sessionId = customWebAuthenticationDetails.getSessionId();
+
+//        String remoteAddr = IPUtil.getClientIP(httpServletRequest);
+        String region = IPUtil.getAddressByIP(remoteAddress);
 
         UserLoginLog logs = new UserLoginLog();
         logs.setUsername(authentication.getName());
-//        logs.setUserAgent(request.getHeader("User-Agent"));
-//        logs.setIpAddress(remoteAddr);
-//        logs.setRegion(region);
+        logs.setUserAgent(headers.get("user-agent").toString());
+        logs.setIpAddress(remoteAddress);
+        logs.setRegion(region);
         logs.setLoginStatus("y");
         userLoginLogRepository.save(logs);
 
@@ -62,27 +71,29 @@ public class UserLoginedEventListener {
     }
 
 
-//    @EventListener
-    // AuthenticationFailureBadCredentialsEvent 可以使用
+    //    AuthenticationFailureBadCredentialsEvent 可以使用
+
+    @EventListener
     public void authenticationFailureBadCredentialsEvent(AuthenticationFailureBadCredentialsEvent authenticationFailureBadCredentialsEvent) {
         UserLoginLog logs = new UserLoginLog();
         Authentication authentication = authenticationFailureBadCredentialsEvent.getAuthentication();
         String username = authentication.getName();
-//        if (authentication.getPrincipal() instanceof User) {
-//            username = ((User) authentication.getPrincipal()).getUsername();
-//        }
-        ServletRequestAttributes ra= (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request =  ra.getRequest();
+        CustomWebAuthenticationDetails customWebAuthenticationDetails = (CustomWebAuthenticationDetails) authentication.getDetails();
+//        HttpServletRequest httpServletRequest = customWebAuthenticationDetails.getHttpServletRequest();
+//        String remoteAddr = IPUtil.getClientIP(httpServletRequest);
+//
 
-        String remoteAddr = IPUtil.getClientIP(request);
-        String region = IPUtil.getAddressByIP(remoteAddr);
+        Map<String, Object> headers = customWebAuthenticationDetails.getHeaders();
+        String remoteAddress = customWebAuthenticationDetails.getRemoteAddress();
+        String sessionId = customWebAuthenticationDetails.getSessionId();
+        String region = IPUtil.getAddressByIP(remoteAddress);
 
         logs.setUsername(username);
-        logs.setUserAgent(request.getHeader("User-Agent"));
-        logs.setIpAddress(remoteAddr);
+        logs.setUserAgent(headers.get("User-Agent").toString());
+        logs.setIpAddress(remoteAddress);
         logs.setRegion(region);
         logs.setLoginStatus("n");
-//        userLoginLogRepository.save(logs);
+        userLoginLogRepository.save(logs);
     }
 
 

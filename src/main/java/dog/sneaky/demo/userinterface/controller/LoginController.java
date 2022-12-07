@@ -61,7 +61,7 @@ public class LoginController {
             model.addAttribute("uuid", uuid);
             model.addAttribute("publicKey", publicKeyBase64);
             model.addAttribute("SPRING_SECURITY_CAPTCHA_ENABLED", springSecurityCaptchaEnabled);
-            session.setAttribute("privatekey" + uuid, privateKeyBase64);
+            session.setAttribute(publicKeyBase64, privateKeyBase64);
 
             return "login2";
 

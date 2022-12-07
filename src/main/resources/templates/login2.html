@@ -44,7 +44,7 @@
             </p>
             <form th:action="@{/login}" method="post" id="loginForm" onsubmit="handleBeforeSubmit()">
                 <input type="hidden" name="uuid" th:value="${uuid}">
-                <input type="hidden" id="_satoken" th:value="${publicKey}">
+                <input type="hidden" id="_satoken" name="_satoken" th:value="${publicKey}">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" th:value="${ #strings.isEmpty(SPRING_SECURITY_LAST_USERNAME) ? localLoginDTO.username : SPRING_SECURITY_LAST_USERNAME}" name="j_username" placeholder="Email"
                            autocomplete="off">

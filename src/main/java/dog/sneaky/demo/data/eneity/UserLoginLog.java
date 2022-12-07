@@ -1,10 +1,11 @@
 package dog.sneaky.demo.data.eneity;
 
-import dog.sneaky.demo.data.AbstractId;
+import dog.sneaky.demo.data.Identifier;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
@@ -14,7 +15,8 @@ import java.time.Instant;
 @Setter
 @Table("logs")
 @ToString(callSuper = true)
-public class UserLoginLog  extends AbstractId<Long> {
+public class UserLoginLog extends Identifier<Long> {
+
     private String username;
     private String ipAddress;
     private String loginStatus;

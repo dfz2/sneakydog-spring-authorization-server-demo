@@ -1,11 +1,7 @@
-package dog.sneaky.demo.configuration;
+package dog.sneaky.demo.data;
 
 
 import cn.hutool.core.util.IdUtil;
-import dog.sneaky.demo.data.AbstractEntity;
-import dog.sneaky.demo.data.AbstractId;
-import dog.sneaky.demo.data.BaseRepositoryImpl;
-import io.vavr.control.Option;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,12 +10,12 @@ import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.data.relational.core.mapping.DefaultNamingStrategy;
-import org.springframework.data.relational.core.mapping.ForeignKeyNaming;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.relational.core.mapping.event.BeforeConvertCallback;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Optional;
 
@@ -42,15 +38,15 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
     }
 
 
+
     @Bean
-    public <T extends AbstractId<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
+    public <T extends Identifier<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
        return new BeforeConvertCallback<T>() {
            @Override
            public T onBeforeConvert(T aggregate) {
-               if (aggregate.getId() != null) {
-                   return aggregate;
+               if (ObjectUtils.isEmpty(aggregate.getId())) {
+                   aggregate.setId(IdUtil.getSnowflakeNextId());
                }
-               aggregate.setId(IdUtil.getSnowflakeNextId());
                return aggregate;
            }
        };
@@ -66,10 +62,5 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
         };
     }
 
-
-    public static void main(String[] args) {
-        Object orElse = Option.of("test").getOrElse("1231313");
-        System.out.println(orElse);
-    }
 
 }

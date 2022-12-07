@@ -81,7 +81,6 @@ spring:
     log-request-details: false
   session:
     redis:
-      namespace: "spring:session"
       cleanup-cron: "0 * * * * *"
   flyway:
     baseline-on-migrate: true
