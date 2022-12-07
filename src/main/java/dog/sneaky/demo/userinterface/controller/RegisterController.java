@@ -7,11 +7,13 @@ import dog.sneaky.demo.userinterface.controller.dto.CheckCAPTCHADTO;
 import dog.sneaky.demo.userinterface.controller.dto.RegisterDTO;
 import dog.sneaky.demo.userinterface.controller.dto.UserRegisterCommand;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,15 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-
-@AllArgsConstructor
-//@Controller
+@Controller
+@RequiredArgsConstructor
 public class RegisterController {
     private final MyUserDetailServiceImpl myUserDetailServiceImpl;
     private final RedisTemplate<Object, Object> redisTemplate;
     private final JavaMailSender javaMailSender;
 
-    @GetMapping("/register.html")
+    @GetMapping({"/register.html", "/reg", "/register", "/reg.html"})
     public String register(){
         return "register2";
     }

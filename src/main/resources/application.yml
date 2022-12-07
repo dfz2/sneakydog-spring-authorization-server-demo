@@ -53,13 +53,21 @@ spring:
       secret: "NFFCBJMOFFIVPZXDDXXHYHDFZ"
   oauth2:
     issuerUrl: "http://xxxxxx"
-#  mail:
-#    default-encoding: utf-8
-#    username: xxxx
-#    password: "xxx"
-#    host: xxxx
-#    properties:
-#      debug: true
+  mail:
+    default-encoding: utf-8
+    username: 517233020@qq.com
+    password: cpwikrsuennjbhfh
+    host: "smtp.qq.com"
+    port: "587"
+    protocol: smtp
+    test-connection: true
+    properties:
+        "mail.smtp.auth": "true"
+        "mail.smtp.SocketFactory": "javax.net.ssl.SSLSocketFactory"
+        "mail.debug": "true"
+        "mail.smtp.starttls.enable": "true"
+        "mail.smtp.starttls.required": "true"
+
   data:
     redis:
       host: localhost
