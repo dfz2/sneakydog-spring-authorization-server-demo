@@ -1,6 +1,7 @@
 package dog.sneaky.demo.configuration;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dog.sneaky.demo.common.DefaultObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.EnableCaching;
@@ -15,17 +16,15 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 
 @AllArgsConstructor
 @Configuration
-@EnableRedisHttpSession
-@EnableCaching
 public class RedisConfiguration {
-    private final DefaultObjectMapper defaultObjectMapper;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer(defaultObjectMapper));
+        redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }

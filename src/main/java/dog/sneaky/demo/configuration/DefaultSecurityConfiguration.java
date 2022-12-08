@@ -23,6 +23,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -37,6 +39,7 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -55,11 +58,15 @@ import java.util.UUID;
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 public class DefaultSecurityConfiguration {
     @Resource
     private MyUserDetailServiceImpl myUserDetailService;
 
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
@@ -164,7 +171,7 @@ public class DefaultSecurityConfiguration {
                                 .passwordParameter("j_password")
 //                        .successHandler(new Custom2UrlAuthenticationSuccessHandler(applicationContext))
                                 .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
-                                .failureHandler(new Custom2SimpleUrlAuthenticationFailureHandler(applicationContext))
+                                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 )
                 .rememberMe(
                         rm -> rm.rememberMeParameter("customerDTO[remember]")
@@ -187,60 +194,6 @@ public class DefaultSecurityConfiguration {
         return http.build();
     }
 
-
-    static class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-        private final ObjectMapper objectMapper;
-
-        private RequestCache requestCache = new HttpSessionRequestCache();
-
-        CustomSuccessHandler(final ObjectMapper objectMapper) {
-            this.objectMapper = objectMapper;
-            setTargetUrlParameter("redirectUrl");
-        }
-
-        public void setRequestCache(RequestCache requestCache) {
-            this.requestCache = requestCache;
-        }
-
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-            SavedRequest savedRequest = this.requestCache.getRequest(request, response);
-            if (savedRequest == null) {
-                super.onAuthenticationSuccess(request, response, authentication);
-                return;
-            }
-
-            String targetUrlParameter = getTargetUrlParameter();
-            if (isAlwaysUseDefaultTargetUrl()
-                    || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-                this.requestCache.removeRequest(request, response);
-                super.onAuthenticationSuccess(request, response, authentication);
-                return;
-            }
-
-            clearAuthenticationAttributes(request);
-            // Use the DefaultSavedRequest URL
-            String targetUrl = savedRequest.getRedirectUrl();
-
-            response.setStatus(200);
-            response.getWriter().write(objectMapper.writeValueAsString(new CustomAuthentication(authentication, targetUrl)));
-        }
-    }
-
-
-    record CustomAuthentication(Authentication authentication, String redirectUrl) {
-    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails userDetails = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("password")
-//                .roles("USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
 
     @Bean
     public RegisteredClientRepository registeredClientRepository() {

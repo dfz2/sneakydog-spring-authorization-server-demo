@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 
-@Configuration
+//@Configuration
 //@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class DistributedLockConfiguration  {
 

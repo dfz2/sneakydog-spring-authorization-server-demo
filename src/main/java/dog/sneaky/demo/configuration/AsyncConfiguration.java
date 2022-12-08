@@ -13,18 +13,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 @EnableAsync
 public class AsyncConfiguration implements AsyncConfigurer {
-    @Bean
-    @Primary
-    public TaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(50);
-        executor.initialize();
-        return executor;
-    }
-
-    @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new DefaultAsyncExceptionHandler();
-    }
+//    @Bean
+//    @Primary
+//    public TaskExecutor taskExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(4);
+//        executor.setMaxPoolSize(50);
+//        executor.initialize();
+//        return executor;
+//    }
+//
+//    @Override
+//    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+//        return new DefaultAsyncExceptionHandler();
+//    }
 }

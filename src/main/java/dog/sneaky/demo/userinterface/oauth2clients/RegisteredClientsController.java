@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @AllArgsConstructor
-@Controller
+//@Controller
 @RequestMapping("/registered/clients")
 public class RegisteredClientsController extends BaseController {
     private final RegisteredClientsService registeredClientsService;

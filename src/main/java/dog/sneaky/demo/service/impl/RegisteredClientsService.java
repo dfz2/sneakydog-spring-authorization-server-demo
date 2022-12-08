@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
-@Component
+//@Component
 public class RegisteredClientsService {
     private final RegisteredClientRepository registeredClientRepository;
     private final RegisteredClientsDAO registeredClientsDAO;

@@ -42,12 +42,12 @@ public class Custom2SimpleUrlAuthenticationFailureHandler extends SimpleUrlAuthe
 //        if (authentication.getPrincipal() instanceof User) {
 //            User user = (User)authentication.getPrincipal();
 //            username = user.getUsername();
-//        }
-        applicationContext.publishEvent(new UserLoginedEvent(this,
-                new LoginInfoDTO(username,
-                        request.getRemoteAddr(),
-                        "",
-                        request.getHeader("User-Agent"), "n")));
+////        }
+//        applicationContext.publishEvent(new UserLoginedEvent(this,
+//                new LoginInfoDTO(username,
+//                        request.getRemoteAddr(),
+//                        "",
+//                        request.getHeader("User-Agent"), "n")));
 
     }
 

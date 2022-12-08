@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 
-@Configuration
-@EnableAspectJAutoProxy
+//@Configuration
+//@EnableAspectJAutoProxy
 public class CatchLogAutoConfiguration {
-    @Bean
-    @ConditionalOnMissingBean(CatchLogAspect.class)
-    public CatchLogAspect catchLogAspect() {
-        return new CatchLogAspect();
-    }
+//    @Bean
+//    @ConditionalOnMissingBean(CatchLogAspect.class)
+//    public CatchLogAspect catchLogAspect() {
+//        return new CatchLogAspect();
+//    }
 }
