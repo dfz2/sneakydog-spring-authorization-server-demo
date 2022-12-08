@@ -1,6 +1,5 @@
 package dog.sneaky.demo.service.impl;
 
-import com.github.pagehelper.Page;
 import dog.sneaky.demo.service.RoleService;
 import dog.sneaky.demo.userinterface.controller.dto.RoleDTO;
 import dog.sneaky.demo.database.dao.RoleDAO;
@@ -9,6 +8,7 @@ import groovy.util.logging.Slf4j;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -24,10 +24,10 @@ class RoleServiceImpl implements RoleService {
         role.setPageNum(roleDTO.getPageNum());
         role.setPageSize(roleDTO.getPageSize());
         role.setRoleName(roleDTO.getRoleName());
-        Page<RoleDO> rolePage = roleDAO.list(role);
+        List<RoleDO> rolePage = roleDAO.list(role);
 
         RoleDTO r = new RoleDTO();
-        r.setTotal(rolePage.getTotal());
+//        r.setTotal(rolePage.getTotal());
         r.setRows(rolePage.stream().map(this::convert).collect(Collectors.toList()));
         return r;
     }

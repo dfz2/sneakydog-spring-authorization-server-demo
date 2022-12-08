@@ -1,6 +1,5 @@
 package dog.sneaky.demo.service.impl;
 
-import com.github.pagehelper.Page;
 import dog.sneaky.demo.data.eneity.CustomUser;
 import dog.sneaky.demo.data.eneity.UserRoleRef;
 import dog.sneaky.demo.data.repository.CustomUserRepository;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
         myUser.setPageNum(userDTO.getPageNum());
         myUser.setPageSize(userDTO.getPageSize());
         myUser.setUsername(userDTO.getUsername());
-        Page<MyUserDO> myUserPage = myUserDAO.list(myUser);
+        List<MyUserDO> myUserPage = myUserDAO.list(myUser);
 
         UserDTO r = new UserDTO();
-        r.setTotal(myUserPage.getTotal());
+//        r.setTotal(myUserPage.getTotal());
         r.setRows(myUserPage.stream().map(this::convert).collect(Collectors.toList()));
         return r;
     }

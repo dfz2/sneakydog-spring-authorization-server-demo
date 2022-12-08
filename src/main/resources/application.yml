@@ -87,9 +87,9 @@ spring:
     check-template-location: true
   mvc:
     log-request-details: false
-  session:
-    redis:
-      cleanup-cron: "0 * * * * *"
+#  session:
+#    redis:
+#      cleanup-cron: "0 * * * * *"
   flyway:
     baseline-on-migrate: true
     enabled: true
