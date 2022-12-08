@@ -2,6 +2,9 @@ package dog.sneaky.demo.userinterface.controller;
 
 
 import dog.sneaky.demo.configuration.MyUserDetailServiceImpl;
+import dog.sneaky.demo.data.eneity.CustomUser;
+import dog.sneaky.demo.service.UserService;
+import dog.sneaky.demo.service.impl.EmailMessageServiceImpl;
 import dog.sneaky.demo.userinterface.controller.dto.CheckCAPTCHACommand;
 import dog.sneaky.demo.userinterface.controller.dto.CheckCAPTCHADTO;
 import dog.sneaky.demo.userinterface.controller.dto.RegisterDTO;
@@ -12,6 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +31,10 @@ import java.util.concurrent.TimeUnit;
 public class RegisterController {
     private final MyUserDetailServiceImpl myUserDetailServiceImpl;
     private final RedisTemplate<Object, Object> redisTemplate;
-    private final JavaMailSender javaMailSender;
+
+    private final UserService userService;
+    private final EmailMessageServiceImpl emailMessageService;
+
 
     @GetMapping({"/register.html", "/reg", "/register", "/reg.html"})
     public String register(){
@@ -39,6 +46,11 @@ public class RegisterController {
         RegisterDTO registerDTO = userRegisterCommand.getRegisterDTO();
         registerDTO.setUsername(userRegisterCommand.getUsername());
 //        springSecurityUserDetailService.userRegister(registerDTO);
+
+        CustomUser customUser = new CustomUser();
+        customUser.setUsername(userRegisterCommand.getUsername());
+        customUser.setPassword(userRegisterCommand.getRegisterDTO().getPassword());
+        userService.createUser(customUser);
         return "redirect:/login";
     }
 
@@ -52,6 +64,7 @@ public class RegisterController {
         } catch (UsernameNotFoundException e) {
             checkResult = true;
         }
+
         return ("n".equals(t) == checkResult);
     }
 
@@ -62,14 +75,11 @@ public class RegisterController {
         if (checkCAPTCHADTO !=null) {
             String username = checkCAPTCHADTO.getUsername();
             String text = RandomStringUtils.randomAlphanumeric(6).toUpperCase();
-            if (sendCAPTCHAEmail(username, text)){
-                redisCacheCAPTCHA(username, text);
-                return true;
-            }
-        } else {
-            return false;
+            System.out.println("email code:" + text);
+            emailMessageService.sendEmailMessage(username, text);
+            redisCacheCAPTCHA(username, text);
         }
-        return false;
+        return true;
     }
 
     @ResponseBody
@@ -84,28 +94,14 @@ public class RegisterController {
     }
 
 
-    private void redisCacheCAPTCHA(String username, String text) {
+
+    @Async
+    public void redisCacheCAPTCHA(String username, String text) {
         String CAPTCHAKey = username + "_" + text;
         redisTemplate.opsForValue().set(CAPTCHAKey, text);
         redisTemplate.expire(CAPTCHAKey, 5L, TimeUnit.MINUTES);
     }
 
 
-    private boolean sendCAPTCHAEmail(String username, String text){
-        if (username != null && text != null) {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("这是一封测试邮件");
-            message.setFrom("service@myhyh.com");
-            message.setTo(username);
-            message.setSentDate(new Date());
-            message.setText(text);
-            javaMailSender.send(message);
-            return true;
-        }  else {
-
-            return false;
-        }
-
-    }
 
 }

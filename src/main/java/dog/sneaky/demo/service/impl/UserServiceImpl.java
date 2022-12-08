@@ -1,6 +1,11 @@
 package dog.sneaky.demo.service.impl;
 
 import com.github.pagehelper.Page;
+import dog.sneaky.demo.data.eneity.CustomUser;
+import dog.sneaky.demo.data.eneity.UserRoleRef;
+import dog.sneaky.demo.data.repository.CustomUserRepository;
+import dog.sneaky.demo.data.repository.UserRoleRefRepository;
+import dog.sneaky.demo.database.dao.RoleDAO;
 import dog.sneaky.demo.service.UserService;
 import dog.sneaky.demo.userinterface.controller.dto.RecoverPasswordCommand;
 import dog.sneaky.demo.userinterface.controller.dto.UserDTO;
@@ -27,6 +32,9 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplate<Object, Object> redisTemplate;
     private final PasswordEncoder passwordEncoder;
 //    private final RedissonClient redissonClient;
+    private final CustomUserRepository customUserRepository;
+    private final UserRoleRefRepository userRoleRefRepository;
+
 
 
     @Override
@@ -100,6 +108,16 @@ public class UserServiceImpl implements UserService {
 //            }
 //        }
 
+        return 0;
+    }
+
+
+    @Transactional
+    @Override
+    public int createUser(CustomUser customUser) {
+        customUser.setPassword(passwordEncoder.encode(customUser.getPassword()));
+        customUserRepository.save(customUser);
+        userRoleRefRepository.save(new UserRoleRef(customUser.getId(), 2L));
         return 0;
     }
 

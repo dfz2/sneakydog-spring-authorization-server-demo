@@ -41,7 +41,6 @@ public class MenuController {
     }
 
 
-
     @PreAuthorize("hasAuthority('ROLE_USER_MENUS_ADD')")
     @GetMapping("/add")
     public String add(Model model){

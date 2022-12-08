@@ -1,5 +1,6 @@
 package dog.sneaky.demo.data.eneity;
 
+import dog.sneaky.demo.data.Identifier;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -11,9 +12,8 @@ import java.util.List;
 
 @Data
 @Table("users")
-public class CustomUser {
-    @Id
-    private Long id;
+public class CustomUser extends Identifier<Long> {
+
     private String username;
     private String password;
 

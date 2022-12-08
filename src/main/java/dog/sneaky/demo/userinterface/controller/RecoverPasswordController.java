@@ -8,10 +8,12 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,27 +25,20 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
-//@Controller
+@Controller
+@RequiredArgsConstructor
 public class RecoverPasswordController {
     private final UserServiceImpl userService;
-    private JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
     private final RedisTemplate<Object, Object> redisTemplate;
+    private final JavaMailSender javaMailSender;
 
-//    @Value("${spring.application.domain}")
-    private String springApplicationDomain = "12313";
+    @Value("${spring.application.domain}")
+    private String appDoamin;
+
     @Value("${spring.mail.username}")
     private String serviceEmailAccount;
 
-    public RecoverPasswordController(UserServiceImpl userService,
-                                     JavaMailSender javaMailSender,
-                                     TemplateEngine templateEngine,
-                                     RedisTemplate<Object, Object> redisTemplate) {
-        this.userService = userService;
-        this.javaMailSender = javaMailSender;
-        this.templateEngine = templateEngine;
-        this.redisTemplate = redisTemplate;
-    }
 
 
 
@@ -58,29 +53,32 @@ public class RecoverPasswordController {
 //            put("test", forgotPasswordCommand.getUsername());
 //        }});
 
-
-        String uuid = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         redisTemplate.opsForValue().set(uuid, forgotPasswordCommand.getUsername());
         redisTemplate.expire("uuid", 5L, TimeUnit.MINUTES);
 //        String sendLink = String.format("https://demo.oauth2.sneaky.dog/recover-password.html?token=%s", jwtToken);
-        String sendLink = String.format(springApplicationDomain + "/recover-password.html?t=%s", uuid);
-        sendEmailVerifyURL(forgotPasswordCommand.getUsername(), sendLink);
+        String verifyUrl = String.format("%s/recover-password.html?t=%s", appDoamin, uuid);
+        sendEmailVerifyURL(forgotPasswordCommand.getUsername(), verifyUrl);
         return "redirect:/login";
     }
 
 
-    private void sendEmailVerifyURL(String username, String sendLink) throws MessagingException {
+    @Async
+    public void sendEmailVerifyURL(String username, String verifyUrl) throws MessagingException {
         Context context = new Context();
-        context.setVariable("verifyUrl", sendLink);
+        context.setVariable("verifyUrl", verifyUrl);
         String text = templateEngine.process("email", context);
         MimeMessage mailMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailMessage);
-        mimeMessageHelper.setSubject("Email Verify...");
-        mimeMessageHelper.setFrom(serviceEmailAccount);
+        mimeMessageHelper.setSubject("Email test.");
+        mimeMessageHelper.setFrom("517233020@qq.com");
         mimeMessageHelper.setTo(username);
         mimeMessageHelper.setText(text, true);
         javaMailSender.send(mailMessage);
     }
+
+
+
 
 //    @PostMapping("/sendLink")
 //    public String sendLink(ForgotDTO forgotDTO) throws Exception {
