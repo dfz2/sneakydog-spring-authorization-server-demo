@@ -89,7 +89,7 @@ public class UserLoginedEventListener {
         String region = IPUtil.getAddressByIP(remoteAddress);
 
         logs.setUsername(username);
-        logs.setUserAgent(headers.get("User-Agent").toString());
+        logs.setUserAgent(headers.get("user-agent").toString());
         logs.setIpAddress(remoteAddress);
         logs.setRegion(region);
         logs.setLoginStatus("n");

@@ -2,10 +2,8 @@ package dog.sneaky.demo.configuration;
 
 import dog.sneaky.demo.data.eneity.CustomUser;
 import dog.sneaky.demo.data.repository.CustomUserRepository;
-import dog.sneaky.demo.database.dao.MyAuthorityDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 
 @Slf4j
@@ -22,23 +19,14 @@ import java.util.stream.Collectors;
 @Component
 public class MyUserDetailServiceImpl implements UserDetailsService {
     private final CustomUserRepository customUserRepository;
-    private final MyAuthorityDAO myAuthorityDAO;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        CustomUser customUser = customUserRepository.loadUserByUsername(username);
-        if (ObjectUtils.isEmpty(customUser)){
-            log.error("用户["+username+"]不存在");
-            throw new UsernameNotFoundException("123131");
-        }
-
-        List<String> perms = myAuthorityDAO.loadPermsByUsername(username);
-        if (!ObjectUtils.isEmpty(perms)){
-            customUser.setPerms(perms);
-        }
-
-        return new User(username, customUser.getPassword(), perms.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        CustomUser customUser = customUserRepository.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("用户[" + username + "]不存在"));
+        Set<SimpleGrantedAuthority> authorities = customUserRepository.getAuthoritiesByUserId(customUser.getId());
+        return new User(username, customUser.getPassword(), authorities);
     }
+
 
 
 }

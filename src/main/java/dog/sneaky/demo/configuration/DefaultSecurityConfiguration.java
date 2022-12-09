@@ -171,7 +171,7 @@ public class DefaultSecurityConfiguration {
                                 .passwordParameter("j_password")
 //                        .successHandler(new Custom2UrlAuthenticationSuccessHandler(applicationContext))
                                 .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
-                                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
+                                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"))
                 )
                 .rememberMe(
                         rm -> rm.rememberMeParameter("customerDTO[remember]")
