@@ -1,7 +1,6 @@
 package dog.sneaky.demo.data.dao;
 
 import dog.sneaky.demo.common.EncryptFieldDTO;
-import dog.sneaky.demo.database.dao.TestEncryptDAO;
 import dog.sneaky.demo.database.dataobject.TestEncryptDO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

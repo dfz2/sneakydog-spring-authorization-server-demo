@@ -2,7 +2,6 @@ package dog.sneaky.demo.authoriz;
 
 import dog.sneaky.demo.common.EncryptFieldDTO;
 import dog.sneaky.demo.common.UuidGenerator;
-import dog.sneaky.demo.database.dao.TestEncryptDAO;
 import dog.sneaky.demo.database.dataobject.TestEncryptDO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
