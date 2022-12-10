@@ -42,8 +42,6 @@ spring:
 #        nettyThreads: 0
 #        codec: !<org.redisson.codec.JsonJacksonCodec> {}
 #        "transportMode": "NIO"
-  messages:
-    basename: i18n.messages
   security:
     oauth2:
       resourceserver:
