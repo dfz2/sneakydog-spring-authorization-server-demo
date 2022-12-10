@@ -6,10 +6,8 @@ package dog.sneaky.demo.common.util;
 //import io.jsonwebtoken.io.Decoders;
 //import io.jsonwebtoken.security.Keys;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 public class JwtUtils {
     static String signingKey  =  "q63x9yt0TUtQAoIVvVV8VA8kaRerHOz/QwzSvm/U7UQ=";

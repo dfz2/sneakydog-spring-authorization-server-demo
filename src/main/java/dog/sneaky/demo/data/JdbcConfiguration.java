@@ -3,11 +3,9 @@ package dog.sneaky.demo.data;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ReflectUtil;
-import dog.sneaky.demo.data.converters.StringToEmailReadingConverter;
 import dog.sneaky.demo.data.rowmappers.SimpleGrantedAuthorityRowMapper;
 import io.vavr.control.Try;
 import org.reflections.Reflections;
-import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -22,15 +20,11 @@ import org.springframework.data.relational.core.mapping.DefaultNamingStrategy;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.relational.core.mapping.event.BeforeConvertCallback;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

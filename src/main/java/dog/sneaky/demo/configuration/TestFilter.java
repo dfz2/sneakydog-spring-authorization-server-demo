@@ -1,10 +1,7 @@
 package dog.sneaky.demo.configuration;
 
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class TestFilter extends UsernamePasswordAuthenticationFilter {
 

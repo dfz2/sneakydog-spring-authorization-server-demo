@@ -24,15 +24,6 @@ spring:
     log-request-details: false
 
 
-#
-#logging:
-#  file:
-#    path: ./logs
-#  level:
-#    org.springframework.web: debug
-#    org.springframework.security: debug
-#    org.springframework.security.oauth2: debug
-
 
 management:
   endpoints:

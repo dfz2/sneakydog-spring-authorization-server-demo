@@ -67,8 +67,7 @@
             queryParamsType: "undefined",//设置参数格式
             queryParams: function queryParams(params) {//设置查询参数
                 return {
-                    t: new Date().getTime(),
-                    pageNum: params.pageNumber,
+                    pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
                     username: params.searchText
                 };
@@ -76,7 +75,10 @@
             responseHandler: function (res) {
                 console.log(res)
                 if (res) {
-                    return res;
+                    return {
+                        rows: res.content,
+                        total: res.totalElements
+                    };
                 } else {
                     return {
                         rows: [],

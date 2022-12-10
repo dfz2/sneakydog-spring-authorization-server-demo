@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout2.html}">
 <head>
@@ -36,7 +36,7 @@
                 <div class="col-8">
                     <form th:action="@{/user/menus/save}" method="post" class="form-horizontal">
                         <input  type="hidden" name="menuId" th:value="${menuId}"/>
-                        <input  type="hidden" name="menuSaveORUpdateDTO.parentId" th:value="${menuSaveORUpdateDTO.parentId}"/>
+                        <input  type="hidden" name="parentId" th:value="${menuSaveORUpdateDTO.parentId}"/>
 
                         <div class="form-group row" th:if="${menuSaveORUpdateDTO.parentId ne 0 }">
                             <label for="menusTrees" class="col-sm-2 col-form-label text-right">ParentMenus</label>
@@ -48,7 +48,7 @@
                         <div class="form-group row">
                             <label for="menuType" class="col-sm-2 col-form-label text-right">MenuType</label>
                             <div class="col-sm-6">
-                                <select id="menuType" class="form-control" name="menuSaveORUpdateDTO.menuType" th:value="${menuSaveORUpdateDTO.menuType}">
+                                <select id="menuType" class="form-control" name="menuType" th:value="${menuSaveORUpdateDTO.menuType}">
                                     <option value="M">DIR</option>
                                     <option value="C">MENU</option>
                                     <option value="F">BUTTON</option>
@@ -60,14 +60,14 @@
                         <div class="form-group row">
                             <label for="menuName" class="col-sm-2 col-form-label text-right">MenuName</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="menuSaveORUpdateDTO.menuName"  th:value="${menuSaveORUpdateDTO.menuName}" id="menuName" placeholder="Menu Name">
+                                <input type="text" class="form-control" name="menuName"  th:value="${menuSaveORUpdateDTO.menuName}" id="menuName" placeholder="Menu Name">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="path" class="col-sm-2 col-form-label text-right">Path</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="menuSaveORUpdateDTO.path" id="path" th:value="${menuSaveORUpdateDTO.path}"  placeholder="Path">
+                                <input type="text" class="form-control" name="url" id="path" th:value="${menuSaveORUpdateDTO.url}"  placeholder="Path">
                             </div>
                         </div>
 
@@ -78,7 +78,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="perms-addon">ROLE_</span>
                                     </div>
-                                    <input type="text" class="form-control" name="menuSaveORUpdateDTO.perms" th:value="${menuSaveORUpdateDTO.perms}"  id="perms" aria-describedby="perms-addon">
+                                    <input type="text" class="form-control" name="perms" th:value="${#strings.replace(menuSaveORUpdateDTO.perms, 'ROLE_', '')}"  id="perms" aria-describedby="perms-addon">
                                 </div>
                                 <span class="help-block m-b-none">控制器中定义的权限标识，如： @PreAuthorize("hasAuthority('ROLE_USER_ONLINE_LIST')")</span>
                             </div>
@@ -134,7 +134,7 @@
                 var status = treeNode.checked;
                 treeObj.checkAllNodes(false);
                 treeObj.checkNode(treeNode, status, false);
-                var $inputParentId = $("input[name='menuSaveORUpdateDTO.parentId']");
+                var $inputParentId = $("input[name='parentId']");
                 if (status) {
                     var checkedNodes = treeObj.getCheckedNodes(true);
                     for (const checkedNode of checkedNodes) {
@@ -145,7 +145,7 @@
                 }
             },
             onAsyncSuccess: function (e, treeId, treeNode, msg) {
-                var parentIdValue = $("input[name='menuSaveORUpdateDTO.parentId']").val();
+                var parentIdValue = $("input[name='parentId']").val();
                 if (parentIdValue && parentIdValue !== '0') {
                     var treeObj = $.fn.zTree.getZTreeObj(treeId);
                     var nodeTree = treeObj.getNodeByParam("id", parentIdValue);
@@ -161,7 +161,7 @@
     };
 
     $(function () {
-        var $parentId = $("input[name='menuSaveORUpdateDTO.parentId']");
+        var $parentId = $("input[name='parentId']");
         var parentIdValue = $parentId.val();
         if (!parentIdValue) {
             $parentId.val("0");

@@ -1,7 +1,7 @@
 package dog.sneaky.demo.service.impl;
 
 
-import dog.sneaky.demo.userinterface.controller.dto.OnlineUsersDTO;
+import dog.sneaky.demo.controllers.controller.dto.OnlineUsersDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,7 +33,7 @@ public class OnlineUsersService {
 //                obj.setRegion(logs.getRegion());
                 onlineUsersDTOS.add(obj);
             }
-            onlineUsersDTO.setRows(onlineUsersDTOS);
+//            onlineUsersDTO.setRows(onlineUsersDTOS);
         }
         return onlineUsersDTO;
     }

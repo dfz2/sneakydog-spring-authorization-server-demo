@@ -38,8 +38,6 @@
 <script layout:fragment="js">
     $(function () {
 
-
-
         $('#role-table').bootstrapTable({
             url: "/role/list",
             dataType: 'json',
@@ -66,7 +64,6 @@
             queryParams: function queryParams(params) {//设置查询参数
                 console.log(params)
                 return {
-                    t: new Date().getTime(),
                     pageNum: params.pageNumber,
                     pageSize: params.pageSize,
                     roleName: params.searchText
@@ -75,7 +72,10 @@
             responseHandler: function (res) {
                 // console.log(res)
                 if (res) {
-                    return res;
+                    return {
+                        rows: res.content,
+                        total: res.totalElements
+                    };
                 } else {
                     return {
                         rows: [],

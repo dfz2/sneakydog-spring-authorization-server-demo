@@ -5,8 +5,6 @@ import dog.sneaky.demo.common.IPUtil;
 import dog.sneaky.demo.data.eneity.UserLoginLog;
 import dog.sneaky.demo.data.repository.UserLoginLogRepository;
 import groovy.util.logging.Slf4j;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -14,9 +12,6 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.FacesRequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Map;
 

@@ -60,11 +60,11 @@ spring:
     host: "smtp.qq.com"
     port: "587"
     protocol: smtp
-    test-connection: true
+    test-connection: false
     properties:
         "mail.smtp.auth": "true"
         "mail.smtp.SocketFactory": "javax.net.ssl.SSLSocketFactory"
-        "mail.debug": "true"
+        "mail.debug": "false"
         "mail.smtp.starttls.enable": "true"
         "mail.smtp.starttls.required": "true"
 
@@ -102,25 +102,6 @@ spring:
 #arthas:
 #  agent-id: hsehdfsfghhwertyfad
 #  tunnel-server: ws://127.0.0.1:7777/ws
-
-
-mybatis:
-  mapper-locations: classpath:META-INF/sqlmap/**.xml
-  type-aliases-package: dog.sneaky.demo.database.dataobject
-  type-handlers-package: dog.sneaky.demo.database.typehandler
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    map-underscore-to-camel-case: true
-    default-fetch-size: 100
-    default-statement-timeout: 30
-    cache-enabled: true
-
-
-
-pagehelper:
-  support-methods-arguments: true
-  params: count=countSql
-  reasonable: true
 
 
 logging:

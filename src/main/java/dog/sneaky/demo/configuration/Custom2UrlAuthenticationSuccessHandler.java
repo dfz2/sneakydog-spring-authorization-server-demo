@@ -1,13 +1,13 @@
 package dog.sneaky.demo.configuration;
 
 import dog.sneaky.demo.common.IPUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class Custom2UrlAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {

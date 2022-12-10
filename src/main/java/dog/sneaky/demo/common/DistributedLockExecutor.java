@@ -2,14 +2,6 @@ package dog.sneaky.demo.common;
 
 
 import lombok.extern.slf4j.Slf4j;
-//import net.javacrumbs.shedlock.core.LockConfiguration;
-//import net.javacrumbs.shedlock.core.LockProvider;
-//import net.javacrumbs.shedlock.core.SimpleLock;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 // Used directly by client code to run with distributed lock
 
