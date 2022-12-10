@@ -2,6 +2,8 @@ package dog.sneaky.demo.controllers;
 
 
 import dog.sneaky.demo.configuration.KeyGeneratorUtils;
+import dog.sneaky.demo.configuration.mfa.MfaAuthentication;
+import dog.sneaky.demo.configuration.mfa.MfaAuthenticationHandler;
 import dog.sneaky.demo.controllers.controller.dto.LocalLoginDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -35,7 +37,7 @@ public class LoginController {
     @GetMapping({"/login", "/login.html"})
     public String login(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)&& !(authentication instanceof MfaAuthentication)) {
             log.info("用户[" + authentication.getName() + "]已经登录");
             return "redirect:/";
         } else {

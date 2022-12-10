@@ -27,9 +27,15 @@ public class MfaAuthenticationHandler implements AuthenticationSuccessHandler, A
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        Authentication anonymous = new AnonymousAuthenticationToken("key", "anonymousUser",
-                AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
-        saveMfaAuthentication(request, response, new MfaAuthentication(anonymous));
+
+        if (exception instanceof CodeErrorAuthenticationException) {
+            CodeErrorAuthenticationException ee = (CodeErrorAuthenticationException) exception;
+            saveMfaAuthentication(request, response, ee.getAuthentication());
+        } else {
+            Authentication anonymous = new AnonymousAuthenticationToken("key", "anonymousUser",
+                    AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+            saveMfaAuthentication(request, response, new MfaAuthentication(anonymous));
+        }
     }
 
     @Override

@@ -1,9 +1,11 @@
 package dog.sneaky.demo.configuration.mfa;
 
 
+import dog.sneaky.demo.controllers.BaseController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,9 +22,11 @@ import javax.naming.NamingEnumeration;
 
 @Controller
 @RequiredArgsConstructor
-public class MfaController {
+public class MfaController extends BaseController {
     private final AuthenticationSuccessHandler successHandler;
     private final MfaService mfaService;
+
+    private final StringRedisTemplate stringRedisTemplate;
 
 
     @GetMapping({"/second-factor", "/second-factor.html"})
@@ -40,19 +44,26 @@ public class MfaController {
     @PostMapping("/second-factor")
     public void processSecondFactor(@RequestParam("code") String code, MfaAuthentication authentication, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String name = authentication.getName();
-        if ("anonymousUser".equals(name)){
-            name = request.getSession().getAttribute("errorUsername").toString();
-        }
-
-        if (mfaService.check(name, code)) {
-            Authentication oldAuthentication = authentication.getAuthentication();
-            SecurityContextHolder.getContext().setAuthentication(oldAuthentication);
-            this.successHandler.onAuthenticationSuccess(request, response, oldAuthentication);
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(name))) {
+            String s = stringRedisTemplate.opsForValue().get(name);
+            if (s != null && s.equals(code)) {
+                Authentication oldAuthentication = authentication.getAuthentication();
+                SecurityContextHolder.getContext().setAuthentication(oldAuthentication);
+                this.successHandler.onAuthenticationSuccess(request, response, oldAuthentication);
+            } else {
+                MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
+                request.getSession().setAttribute("errorMessage", " Email Verify Code Error");
+                request.getSession().setAttribute("errorUsername", name);
+                mfaAuthenticationHandler.onAuthenticationFailure(request, response, new CodeErrorAuthenticationException("bad credentials", authentication.getAuthentication()));
+            }
         } else {
-            MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
-            request.getSession().setAttribute("errorMessage", " Email Verify Code Error");
-            request.getSession().setAttribute("errorUsername", name);
-            mfaAuthenticationHandler.onAuthenticationFailure(request, response, new BadCredentialsException("bad credentials"));
+            SecurityContextHolder.clearContext();
+            response.sendRedirect("/login.html");
+            // 如果是过期
+//            MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
+//            request.getSession().setAttribute("errorMessage", " Email Verify Code Error");
+//            request.getSession().setAttribute("errorUsername", name);
+//            mfaAuthenticationHandler.onAuthenticationFailure(request, response, new BadCredentialsException("bad credentials"));
         }
     }
 

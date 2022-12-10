@@ -77,7 +77,7 @@ public class UserLoginEventListener {
         try {
             javaMailSender.send(simpleMessage);
             String key = emailAddress + "^_^" + s;
-            stringRedisTemplate.opsForValue().set(key, "517233020@qq.com");
+            stringRedisTemplate.opsForValue().set(emailAddress, s);
             stringRedisTemplate.expire(key, Duration.ofMinutes(5));
         } catch (Exception e){
             e.printStackTrace();
