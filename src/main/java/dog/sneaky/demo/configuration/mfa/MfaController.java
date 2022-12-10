@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.naming.NamingEnumeration;
+
 
 @Controller
 @RequiredArgsConstructor
 public class MfaController {
-
     private final AuthenticationSuccessHandler successHandler;
-
-    private final AuthenticationFailureHandler failureHandler;
+    private final MfaService mfaService;
 
 
     @GetMapping({"/second-factor", "/second-factor.html"})
@@ -39,13 +39,19 @@ public class MfaController {
 
     @PostMapping("/second-factor")
     public void processSecondFactor(@RequestParam("code") String code, MfaAuthentication authentication, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if ("123".equals(code)) {
+        String name = authentication.getName();
+        if ("anonymousUser".equals(name)){
+            name = request.getSession().getAttribute("errorUsername").toString();
+        }
+
+        if (mfaService.check(name, code)) {
             Authentication oldAuthentication = authentication.getAuthentication();
             SecurityContextHolder.getContext().setAuthentication(oldAuthentication);
             this.successHandler.onAuthenticationSuccess(request, response, oldAuthentication);
         } else {
             MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
-            request.getSession().setAttribute("errorMessage", "code error");
+            request.getSession().setAttribute("errorMessage", " Email Verify Code Error");
+            request.getSession().setAttribute("errorUsername", name);
             mfaAuthenticationHandler.onAuthenticationFailure(request, response, new BadCredentialsException("bad credentials"));
         }
     }

@@ -65,9 +65,10 @@ spring:
         "mail.debug": "false"
         "mail.smtp.starttls.enable": "true"
         "mail.smtp.starttls.required": "true"
-
   data:
     redis:
+      repositories:
+        enabled: false
       host: localhost
       port: 6379
       password: 123456

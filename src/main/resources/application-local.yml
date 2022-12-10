@@ -8,7 +8,7 @@ server:
 
 spring:
   security:
-    username: "test1@yeah.net"
+    username: "sneakydog@yeah.net"
     password: "sneakydogTestPasswod12"
   captcha:
     enabled: false

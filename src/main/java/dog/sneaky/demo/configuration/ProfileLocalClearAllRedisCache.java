@@ -13,7 +13,7 @@ import java.util.Set;
 @Component
 @Order(1)
 @RequiredArgsConstructor
-public class ClearRedis implements ApplicationRunner {
+public class ProfileLocalClearAllRedisCache implements ApplicationRunner {
 
     private final RedisTemplate<Object, Object> redisTemplate;
 

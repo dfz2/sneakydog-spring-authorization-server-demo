@@ -6,23 +6,31 @@ import dog.sneaky.demo.data.eneity.UserLoginLog;
 import dog.sneaky.demo.data.repository.UserLoginLogRepository;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserLoginedEventListener {
+public class UserLoginEventListener {
 //    private final LogsDAO logsDAO;
 
     private final UserLoginLogRepository userLoginLogRepository;
+    private final JavaMailSender javaMailSender;
 
+    private final StringRedisTemplate stringRedisTemplate;
 
 
     @Async
@@ -51,6 +59,29 @@ public class UserLoginedEventListener {
         logs.setLoginStatus("y");
         userLoginLogRepository.save(logs);
 
+        sendEmailMessage(authentication.getName());
+    }
+
+
+
+    @Async
+    public void sendEmailMessage(String emailAddress){
+        String s = RandomStringUtils.randomNumeric(10);
+        SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        simpleMessage.setFrom("517233020@qq.com");
+        simpleMessage.setTo(emailAddress);
+        simpleMessage.setSubject("Sneakydog-demo Login Mfa Email verify code,");
+        simpleMessage.setText("有效期5分钟"+s);
+
+        System.out.println("有效期5分钟:"+s);
+        try {
+            javaMailSender.send(simpleMessage);
+            String key = emailAddress + "^_^" + s;
+            stringRedisTemplate.opsForValue().set(key, "517233020@qq.com");
+            stringRedisTemplate.expire(key, Duration.ofMinutes(5));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 //    @EventListener
