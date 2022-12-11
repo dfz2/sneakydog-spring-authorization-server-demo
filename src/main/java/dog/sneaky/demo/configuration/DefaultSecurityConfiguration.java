@@ -15,6 +15,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +45,8 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
@@ -49,7 +54,10 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.security.web.authentication.*;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.RequestedUrlRedirectInvalidSessionStrategy;
 import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.KeyPair;
@@ -58,6 +66,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+
+@Slf4j
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
@@ -205,7 +215,8 @@ public class DefaultSecurityConfiguration {
                         .clearAuthentication(true)
                         .invalidateHttpSession(true))
                 .sessionManagement()
-                .invalidSessionUrl("/invalidate?invalidate")
+//                .invalidSessionUrl("/invalidate?invalidate")
+                .invalidSessionStrategy(new RequestedUrlRedirectInvalidSessionStrategy())
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false) // / 当达到最大值时，是否保留已经登录的用户
                 .expiredSessionStrategy(new SimpleRedirectSessionInformationExpiredStrategy("/login?maximumSessions"))

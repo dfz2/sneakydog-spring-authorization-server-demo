@@ -2,6 +2,9 @@ package dog.sneaky.demo.configuration.mfa;
 
 
 import dog.sneaky.demo.controllers.BaseController;
+import dog.sneaky.demo.controllers.controller.dto.MenuDTO;
+import dog.sneaky.demo.data.eneity.Menus;
+import dog.sneaky.demo.data.repository.MenusRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +18,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
 public class MfaController extends BaseController {
     private final AuthenticationSuccessHandler successHandler;
     private final MfaService mfaService;
+
+    private final MenusRepository menusRepository;
 
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -45,6 +53,7 @@ public class MfaController extends BaseController {
             if (s != null && s.equals(code)) {
                 Authentication oldAuthentication = authentication.getAuthentication();
                 SecurityContextHolder.getContext().setAuthentication(oldAuthentication);
+                request.getSession().setAttribute("menuDTOS", test());
                 this.successHandler.onAuthenticationSuccess(request, response, oldAuthentication);
             } else {
                 MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
@@ -62,6 +71,45 @@ public class MfaController extends BaseController {
 //            mfaAuthenticationHandler.onAuthenticationFailure(request, response, new BadCredentialsException("bad credentials"));
         }
     }
+
+
+
+
+    private List<MenuDTO> test(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();  // 正确方式
+        List<Menus> menusList = menusRepository.getAllByUsername(username);
+        List<MenuDTO> menuDTOS = new ArrayList<>();
+
+        for (Menus myMenu : menusList) {
+            if (!"B".equals(myMenu.getMenuType())){
+                if (myMenu.getParentId() == 0L) {
+                    MenuDTO parentMenu = new MenuDTO();
+                    parentMenu.setMenuId(myMenu.getId());
+                    parentMenu.setMenuName(myMenu.getMenuName());
+                    parentMenu.setIcon("fas fa-tachometer-alt");
+                    menuDTOS.add(parentMenu);
+                }
+            }
+        }
+
+        for (MenuDTO menuDTO : menuDTOS) {
+            for (Menus myMenu : menusList) {
+                if (menuDTO.getMenuId().equals(myMenu.getParentId())) {
+                    MenuDTO child = new MenuDTO();
+                    child.setParentName(menuDTO.getMenuName());
+                    child.setMenuName(myMenu.getMenuName());
+                    child.setMenuId(myMenu.getId());
+                    child.setParentId(menuDTO.getMenuId());
+                    child.setUrl(myMenu.getUrl());
+                    child.setIcon("far fa-circle");
+                    menuDTO.getChilds().add(child);
+                }
+            }
+        }
+
+        return menuDTOS;
+    }
+
 
 
 //    @GetMapping("/third-factor")
