@@ -2,7 +2,6 @@ package dog.sneaky.demo.authoriz;
 
 import dog.sneaky.demo.common.EncryptFieldDTO;
 import dog.sneaky.demo.common.UuidGenerator;
-import dog.sneaky.demo.database.dataobject.TestEncryptDO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,15 +34,6 @@ class SneakydogSpringAuthorizationServerDemoApplicationTests {
 //    @Qualifier("MyRegisteredClientRepository")
 
 
-    @Autowired
-    private TestEncryptDAO testEncryptDAO;
-
-    @Test
-    public void testENC() {
-        TestEncryptDO testEncrypt = new TestEncryptDO();
-        testEncrypt.setName(new EncryptFieldDTO().withPlainText("1231313131"));
-        testEncryptDAO.insert(testEncrypt);
-    }
 
 
     @Autowired

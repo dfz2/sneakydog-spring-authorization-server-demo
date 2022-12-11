@@ -6,6 +6,8 @@ services:
     image: "sneakydog-spring-authorization-server-demo:latest"
     ports:
       - "9999:9008"
+    environment:
+      - "env=staging"
 
 networks:
   default:
