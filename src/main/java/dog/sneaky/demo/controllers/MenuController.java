@@ -31,10 +31,12 @@ public class MenuController {
 
     @PreAuthorize("hasAuthority('ROLE_USER_MENUS_LIST')")
     @ResponseBody
-    @PostMapping("")
+    @GetMapping("/lists")
     public List<MenuDTO> list(MenuDTO menuDTO){
-       return menuService.listMenus(menuDTO);
+        return menuService.listMenus(menuDTO);
     }
+
+
 
     @PreAuthorize("hasAuthority('ROLE_USER_MENUS_ADD')")
     @ResponseBody

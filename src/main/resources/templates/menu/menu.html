@@ -46,16 +46,15 @@
     var $table = $('#table')
     $(function() {
         $table.bootstrapTable({
-            url: '/user/menus',
+            url: '/user/menus/lists',
             toolbar: '#toolbar',
             dataType: 'json',
-            method: 'POST',
+            method: 'GET',
             singleSelect: true,         //设置是否单选
             contentType: "application/x-www-form-urlencoded",//发送到服务器的数据编码类型
             idField: 'menuId',
             showColumns: true,
             responseHandler: function (res) {
-                console.log(12313)
                 console.log(res)
                 if (res) {
                     return res;

@@ -1,0 +1,28 @@
+server:
+  port: 9008
+  servlet:
+    session:
+      cookie:
+        name: authorization-server-session-id
+        secure: false
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://mysqldb:3306/test"
+    username: root
+    password: 123456
+  captcha:
+    enabled: false
+  thymeleaf:
+    cache: true
+    enabled: true
+    encoding: utf-8
+    check-template-location: true
+  application:
+    domain: https://staging.hecs.myhyh.com
+    name: sneakydog-spring-authorization-server-demo
+  mvc:
+    log-request-details: false
+
+

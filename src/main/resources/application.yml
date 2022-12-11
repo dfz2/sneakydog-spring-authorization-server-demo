@@ -42,15 +42,6 @@ spring:
 #        nettyThreads: 0
 #        codec: !<org.redisson.codec.JsonJacksonCodec> {}
 #        "transportMode": "NIO"
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://auth-server:9000
-    password:
-      secret: "NFFCBJMOFFIVPZXDDXXHYHDFZ"
-  oauth2:
-    issuerUrl: "http://xxxxxx"
   mail:
     default-encoding: utf-8
     username: 517233020@qq.com
@@ -76,9 +67,6 @@ spring:
     active: local
   application:
     name: sneakydog-spring-authorization-server-demo
-    rsa:
-      publicKey: "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1ZkVLJ5qj/RrdRo+UOLbn/qjSEiRIGIC4ojidIydSyGNwBx/pi5f+KQsN54FvuPXQlm6+4p5tnjsqQhfrC50Pu4rT55606lhhspXeXP5Ka6QnnWELcSRcyLvWfXbCyeKbJFOSJQzTDyGQpb8e22McRcsRSwHjLnM4nwKfSiTjSQIDAQAB"
-      privateKey: "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALVmRUsnmqP9Gt1Gj5Q4tuf+qNISJEgYgLiiOJ0jJ1LIY3AHH+mLl/4pCw3ngW+49dCWbr7inm2eOypCF+sLnQ+7itPnnrTqWGGyld5c/kprpCedYQtxJFzIu9Z9dsLJ4pskU5IlDNMPIZClvx7bYxxFyxFLAeMuczifAp9KJONJAgMBAAECgYEAtWIE6cg5Fb7RLO8QRFqNcd6u+hcP1lNB6tyylVWATYN4Ap3tJ/7gRVDO7+FMCOW+TgsNw6sgVWXBrViXR/y91z0pEsLalwkOmMk4hDN/GfphL2yTzNMO1GqhAWJb1MYhtRdxyDB4RoNPwhg9eGJgdkWZQvT+o3wqoDH2ySc0zoECQQDfWFoijSBsAshfhH6o6rBGJt18ugR49i+u7FWtz7yZw0VFZEL96ji1MptOiz5g52hE8V/tIuo88iNDqhmMgKERAkEAz+vseGG7K3FZBf6Q6gZaacN1sb2jAl64kxNzIAVg5e5nsSGKgArf57R0yrGRTxcCY1IVKZBa7ZzlidJzAUieuQJBAKSgaFf9dH+JEY8uh3oU+3fKIApWxwMuW/lw5LqoXBlu0PmULLki00fklIuxoXomODpRPOb7jHL9/DZdBFYHXjECQFEwh+MuDn9VQHT1xbKMjouUFoY0Tc3kHODZjG/pib/fS0BAn6uGE46PybdIhTxD+Nu9tqPHSapVRNB/jAbpS4kCQFeK7Nc2b1mgOpprI7RePx0ccfqJLHSIraN3WGHGgRsM7l3jXDQSn1yIJEcfa2cRSaYkFIL6x3kexstTwmh3oKQ="
   thymeleaf:
     cache: false
     enabled: true
@@ -86,21 +74,6 @@ spring:
     check-template-location: true
   mvc:
     log-request-details: false
-#  session:
-#    redis:
-#      cleanup-cron: "0 * * * * *"
-  flyway:
-    baseline-on-migrate: true
-    enabled: true
-    create-schemas: true
-  artemis:
-    embedded:
-      data-directory:
-
-
-#arthas:
-#  agent-id: hsehdfsfghhwertyfad
-#  tunnel-server: ws://127.0.0.1:7777/ws
 
 
 logging:
@@ -109,8 +82,4 @@ logging:
     "org.springframework.jdbc.core": trace
 
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 @RestController
 @Slf4j
@@ -15,6 +16,12 @@ public class InvalidateSessionController {
 
     @RequestMapping("/invalidate")
     public void invalidateSession(HttpServletRequest request, HttpServletResponse response) {
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            System.out.println(headerNames.nextElement());
+        }
+
         if (isAjax(request)) {
             response.setStatus(401);
         } else {

@@ -11,17 +11,23 @@ import dog.sneaky.demo.configuration.mfa.MfaAuthentication;
 import dog.sneaky.demo.configuration.mfa.MfaAuthenticationHandler;
 import dog.sneaky.demo.configuration.mfa.MfaTrustResolver;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,12 +43,15 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.*;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -173,7 +182,7 @@ public class DefaultSecurityConfiguration {
 //                                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"))
                                 .successHandler(mfaAuthenticationHandler)
                                 .failureHandler(mfaAuthenticationHandler)
-                )
+                ).requestCache(rc -> rc.requestCache(new CustomRequestCache()))
                 .exceptionHandling((exceptions) -> exceptions
                         .withObjectPostProcessor(new ObjectPostProcessor<ExceptionTranslationFilter>() {
                             @Override
@@ -191,23 +200,25 @@ public class DefaultSecurityConfiguration {
 //                        .tokenRepository(persistentTokenRepository())
                 )
 //                .csrf(c -> c.csrfTokenRepository(new CookieCsrfTokenRepository()))
-                .logout(lo -> lo.logoutSuccessUrl("/login")
+                .logout(lo -> lo.logoutSuccessUrl("/login?logout")
                         .deleteCookies("authorization-server-session-id")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true))
                 .sessionManagement()
-                .invalidSessionUrl("/invalidate")
+                .invalidSessionUrl("/invalidate?invalidate")
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false) // / 当达到最大值时，是否保留已经登录的用户
                 .expiredSessionStrategy(new SimpleRedirectSessionInformationExpiredStrategy("/login?maximumSessions"))
-                .expiredUrl("/login");
+                .expiredUrl("/login?expiredUrl");
 
         return http.build();
     }
 
     @Bean
     AuthenticationSuccessHandler successHandler() {
-        return new SavedRequestAwareAuthenticationSuccessHandler();
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setTargetUrlParameter("continue");
+        return successHandler;
     }
 
     @Bean
