@@ -6,8 +6,12 @@ import cn.hutool.core.util.ReflectUtil;
 import dog.sneaky.demo.data.rowmappers.SimpleGrantedAuthorityRowMapper;
 import io.vavr.control.Try;
 import org.reflections.Reflections;
+import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.AuditorAware;
@@ -25,6 +29,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +42,12 @@ import java.util.stream.Collectors;
 public class JdbcConfiguration extends AbstractJdbcConfiguration {
 
 
+    @Primary
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    DataSource dataSource(){
+        return DataSourceBuilder.create().build();
+    }
 
     @SuppressWarnings("rawtypes")
     @Override
