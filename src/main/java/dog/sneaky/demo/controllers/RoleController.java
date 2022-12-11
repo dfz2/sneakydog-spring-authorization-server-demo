@@ -41,13 +41,13 @@ public class RoleController {
 
     @PreAuthorize("hasAuthority('ROLE_USER_ROLES_ADD')")
     @GetMapping("/roles/add")
-    public String add(RoleDTO roleDTO){
+    public String add(Role role){
         return "role/add";
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER_ROLW_ADD')")
     @PostMapping("/role/save")
-    public void save(RoleSaveOrUpdateCommand roleSaveOrUpdateCommand){
-
+    public void save(Role role){
+        roleRepository.save(role);
     }
 }

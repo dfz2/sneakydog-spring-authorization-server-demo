@@ -239,7 +239,7 @@
                 <li class="nav-item dropdown">
                     <a id="user-dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle" sec:authentication="name">username</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                        <li><a href="#" class="dropdown-item">user profile</a></li>
+                        <li><a th:href="@{/user/profile}" class="dropdown-item">user profile</a></li>
 <!--                        <li><a th:href="@{/myAuthority.html}" class="dropdown-item">my authority</a></li>-->
 <!--                        <li><a sec:authorize="hasAuthority('ROLE_MY_APP')" th:href="@{/my-app.html}" class="dropdown-item">my app</a></li>-->
                         <li>
