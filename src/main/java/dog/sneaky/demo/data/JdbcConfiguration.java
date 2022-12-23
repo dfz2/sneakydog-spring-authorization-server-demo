@@ -42,12 +42,12 @@ import java.util.stream.Collectors;
 public class JdbcConfiguration extends AbstractJdbcConfiguration {
 
 
-    @Primary
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource")
-    DataSource dataSource(){
-        return DataSourceBuilder.create().build();
-    }
+//    @Primary
+//    @Bean
+//    @ConfigurationProperties(prefix = "spring.datasource")
+//    DataSource dataSource(){
+//        return DataSourceBuilder.create().build();
+//    }
 
     @SuppressWarnings("rawtypes")
     @Override

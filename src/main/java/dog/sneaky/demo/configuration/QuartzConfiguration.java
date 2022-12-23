@@ -15,10 +15,10 @@ import javax.sql.DataSource;
 @EnableScheduling
 public class QuartzConfiguration  {
 
-    @Bean("quartzDataSource")
-    @QuartzDataSource
-    @ConfigurationProperties(prefix = "spring.quartz.datasource")
-    DataSource quartzDataSource(){
-        return DataSourceBuilder.create().build();
-    }
+//    @Bean("quartzDataSource")
+//    @QuartzDataSource
+//    @ConfigurationProperties(prefix = "spring.quartz.datasource")
+//    DataSource quartzDataSource(){
+//        return DataSourceBuilder.create().build();
+//    }
 }
