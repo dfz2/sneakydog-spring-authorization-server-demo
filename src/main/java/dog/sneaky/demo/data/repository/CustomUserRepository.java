@@ -16,5 +16,6 @@ public interface CustomUserRepository extends CrudRepository<CustomUser, Long>, 
 
     Optional<CustomUser> getUserByUsername(String username);
 
+
     Set<SimpleGrantedAuthority> getAuthoritiesByUserId(Long userId);
 }

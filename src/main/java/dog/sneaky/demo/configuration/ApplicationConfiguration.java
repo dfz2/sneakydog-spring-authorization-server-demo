@@ -16,10 +16,6 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 public class ApplicationConfiguration {
 
-//    @Bean
-//    public HttpSessionEventPublisher httpSessionEventPublisher() {
-//        return new HttpSessionEventPublisher();
-//    }
 
 
     @Bean

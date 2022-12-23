@@ -1,15 +1,25 @@
 package dog.sneaky.demo.data.dao;
 
-import dog.sneaky.demo.common.EncryptFieldDTO;
+import dog.sneaky.demo.data.repository.RoleRepository;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 
 @SpringBootTest
 class TestEncryptDAOTest {
 
+
+    @Resource
+    private RoleRepository roleRepository;
+
+
+
+    @Test
+    public void test2(){
+
+
+
+    }
 
 }
