@@ -82,14 +82,11 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
 
     @Bean
     public <T extends Identifier<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
-       return new BeforeConvertCallback<T>() {
-           @Override
-           public T onBeforeConvert(T aggregate) {
-               if (ObjectUtils.isEmpty(aggregate.getId())) {
-                   aggregate.setId(IdUtil.getSnowflakeNextId());
-               }
-               return aggregate;
+       return aggregate -> {
+           if (ObjectUtils.isEmpty(aggregate.getId())) {
+               aggregate.setId(IdUtil.getSnowflakeNextId());
            }
+           return aggregate;
        };
     }
 

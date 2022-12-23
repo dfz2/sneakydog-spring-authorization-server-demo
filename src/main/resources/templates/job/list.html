@@ -26,9 +26,9 @@
         </div>
         <div class="card-body">
             <div class="fixed-table-toolbar" id="toolbar">
-                <a class="btn btn-w-m btn-primary" sec:authorize="hasAuthority('ROLE_USER_ROLES_ADD')" th:href="@{/roles/add}"><i class="fa fa-plus"></i>新增</a>
+                <a class="btn btn-w-m btn-primary" sec:authorize="hasAuthority('ROLE_JOB_ADD')" th:href="@{/roles/add}"><i class="fa fa-plus"></i>新增</a>
             </div>
-            <table id="role-table">
+            <table id="job-table">
             </table>
         </div>
     </div>
@@ -38,8 +38,8 @@
 <script layout:fragment="js">
     $(function () {
 
-        $('#role-table').bootstrapTable({
-            url: "/role/list",
+        $('#job-table').bootstrapTable({
+            url: "/job/list",
             dataType: 'json',
             method: 'get',
             toolbar: '#toolbar',
@@ -86,18 +86,34 @@
             columns: [
                 {
                     checkbox: true
-                }, {
-                    title: 'id',
-                    field: 'id',
+                },{
+                    title: 'jobName',
+                    field: 'jobName',
                     valign: 'middle'
-                }, {
-                    title: 'roleName',
-                    field: 'roleName',
+                },
+                {
+                    title: 'jobGroup',
+                    field: 'jobGroup',
                     valign: 'middle'
-                }
-                , {
-                    title: 'remark',
-                    field: 'remark',
+                },
+                {
+                    title: 'invokeTarget',
+                    field: 'invokeTarget',
+                    valign: 'middle'
+                },
+                {
+                    title: 'cronExpression',
+                    field: 'cronExpression',
+                    valign: 'middle'
+                },
+                {
+                    title: 'status',
+                    field: 'status',
+                    valign: 'middle'
+                },
+                {
+                    title: 'createTime',
+                    field: 'createTime',
                     valign: 'middle'
                 },
                 {
@@ -113,7 +129,7 @@
 
     function operateFormatter(value, row, index) {
         if([[${#authorization.expression('hasAuthority("ROLE_USER_ROLES_EDIT")')}]]) {
-            return [ '<a href="/roles/'+row.id+'" class="btn btn-sm btn-secondary" title="修改权限"><i class="fas fa-edit"></i></a>',].join('');
+            return [ '<a href="/job/'+row.id+'/edit" class="btn btn-sm btn-secondary" title="update"><i class="fas fa-edit"></i></a>',].join('');
         }
     }
 </script>

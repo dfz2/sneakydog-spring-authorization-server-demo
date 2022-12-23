@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout2.html}">
 <head>
@@ -39,7 +39,7 @@
 
 <th:block layout:fragment="pagejs">
     <script src="https://cdn.jsdelivr.net/npm/jquery-treegrid@0.3.0/js/jquery.treegrid.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.0/dist/extensions/treegrid/bootstrap-table-treegrid.min.js"></script>
 </th:block>
 
 <script layout:fragment="js" th:inline="javascript">
@@ -53,6 +53,8 @@
             singleSelect: true,         //设置是否单选
             contentType: "application/x-www-form-urlencoded",//发送到服务器的数据编码类型
             idField: 'menuId',
+            treeShowField: 'menuName',
+            parentIdField: 'parentId',
             showColumns: true,
             responseHandler: function (res) {
                 console.log(res)
@@ -96,8 +98,6 @@
                     formatter: 'operateFormatter'
                 },
             ],
-            treeShowField: 'menuName',
-            parentIdField: 'parentId',
             onPostBody: function() {
                 var columns = $table.bootstrapTable('getOptions').columns
                 if (columns && columns[0][1].visible) {
