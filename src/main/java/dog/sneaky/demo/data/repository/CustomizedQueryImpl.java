@@ -1,5 +1,6 @@
 package dog.sneaky.demo.data.repository;
 
+import dog.sneaky.demo.data.eneity.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +12,7 @@ import java.util.List;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class CustomizedQueryImpl implements CustomizedQuery{
+public class CustomizedQueryImpl implements CustomizedQuery<Role> {
 
     private final JdbcTemplate jdbcTemplate;
 
