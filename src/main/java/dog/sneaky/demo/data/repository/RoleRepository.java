@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface RoleRepository extends CrudRepository<Role, Long>, PagingAndSortingRepository<Role, Long> {
+public interface RoleRepository extends CustomizedQuery, CrudRepository<Role, Long>, PagingAndSortingRepository<Role, Long> {
 
 
 
