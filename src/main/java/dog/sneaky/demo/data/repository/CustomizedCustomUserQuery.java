@@ -5,9 +5,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
-public interface CustomizedCustomUserQuery<T> {
+interface CustomizedCustomUserQuery<T> {
 
     Optional<CustomUser> getUserByUsername(String username);
 

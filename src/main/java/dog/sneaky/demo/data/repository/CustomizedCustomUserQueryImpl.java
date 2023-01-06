@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CustomizedCustomUserQueryImpl implements CustomizedCustomUserQuery<CustomUser>{
+class CustomizedCustomUserQueryImpl implements CustomizedCustomUserQuery<CustomUser>{
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
