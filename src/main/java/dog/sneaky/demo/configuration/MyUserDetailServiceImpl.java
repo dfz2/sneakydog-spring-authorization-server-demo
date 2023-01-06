@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Set;
 
 
@@ -23,7 +24,7 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         CustomUser customUser = customUserRepository.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("用户[" + username + "]不存在"));
-        Set<SimpleGrantedAuthority> authorities = customUserRepository.getAuthoritiesByUserId(customUser.getId());
+        Collection<SimpleGrantedAuthority> authorities = customUserRepository.getAuthoritiesByUserId(customUser.getId());
         return new User(username, customUser.getPassword(), authorities);
     }
 
