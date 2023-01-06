@@ -3,15 +3,10 @@ package dog.sneaky.demo.data;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ReflectUtil;
-import dog.sneaky.demo.data.rowmappers.SimpleGrantedAuthorityRowMapper;
 import io.vavr.control.Try;
 import org.reflections.Reflections;
-import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.AuditorAware;
@@ -24,15 +19,13 @@ import org.springframework.data.relational.core.mapping.DefaultNamingStrategy;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.relational.core.mapping.event.BeforeConvertCallback;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -52,16 +45,19 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
     @SuppressWarnings("rawtypes")
     @Override
     protected List<?> userConverters() {
-        Set<Class<? extends Converter>> subTypesOf = new Reflections("dog.sneaky.demo.data.converters").getSubTypesOf(Converter.class);
-        return subTypesOf.stream().map(it -> Try.of(()->ReflectUtil.newInstance(it)).get()).collect(Collectors.toList());
+        return new Reflections("dog.sneaky.demo.data.converters")
+                .getSubTypesOf(Converter.class)
+                .stream().map(it -> Try.of(()->ReflectUtil.newInstance(it)).get()).collect(Collectors.toList());
     }
 
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("all")
     @Bean
     QueryMappingConfiguration rowMappers() {
         DefaultQueryMappingConfiguration mappers = new DefaultQueryMappingConfiguration();
-        mappers.registerRowMapper(SimpleGrantedAuthority.class, new SimpleGrantedAuthorityRowMapper());
+        new Reflections("dog.sneaky.demo.data.rowmappers")
+                .getSubTypesOf(RowMapper.class)
+                .forEach(it -> mappers.registerRowMapper(it, Try.of(() -> it.getDeclaredConstructor().newInstance()).get()));
         return mappers;
     }
 
@@ -77,8 +73,6 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
             }
         };
     }
-
-
 
     @Bean
     public <T extends Identifier<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
