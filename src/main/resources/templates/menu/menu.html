@@ -136,21 +136,24 @@
 
     function operateFormatter(value, row, index) {
 
+        console.log(row.menuId)
+
+        var testid = row.menuId.toString();
+
         let ops = [];
         if([[${#authorization.expression('hasAuthority("ROLE_USER_MENUS_EDIT")')}]]) {
             ops.push('<a href="/user/menus/'+row.menuId+'/edit" class="btn btn-sm btn-secondary" title="修改权限"><i class="fas fa-edit"></i></a>');
         }
 
         if([[${#authorization.expression('hasAuthority("ROLE_USER_MENUS_DEL")')}]]) {
-            ops.push(`<a href="javascript:void(0)" onclick="handleMenusDel(${row.menuId})" class="btn btn-sm btn-secondary" title="删除"><i class="fas fa-trash"></i></a>`);
+            ops.push(`<a href="javascript:void(0)" onclick="handleMenusDel('${testid}')" class="btn btn-sm btn-secondary" title="删除"><i class="fas fa-trash"></i></a>`);
         }
 
         return ops.join('     ')
     }
 
 
-    let handleMenusDel = (menusId) => {
-
+    function handleMenusDel(menusId) {
         console.log(menusId)
         var form1 = document.createElement("form");
         form1.id = "form1";
@@ -159,16 +162,23 @@
 
         var input = document.createElement("input");
         input.type = "text";
-        input.name = "menuId";
+        input.name = "id";
         input.value = menusId;
 
+        var input2= document.createElement("input");
+        input2.type = "text";
+        input2.name = "_csrf";
+        input2.value = g._csrf;
+
         form1.appendChild(input);
+        form1.appendChild(input2);
         form1.method = "POST";
         form1.action = "/user/menus/del"
 
         form1.submit();
         document.body.removeChild(form1);
     }
+
 
 
 
