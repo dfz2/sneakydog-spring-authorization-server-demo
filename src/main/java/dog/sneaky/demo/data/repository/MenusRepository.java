@@ -9,9 +9,8 @@ import java.util.List;
 
 
 @Repository
-public interface MenusRepository extends CrudRepository<Menus, Long> {
+public interface MenusRepository extends CrudRepository<Menus, Long>, CustomizedMenuQuery<Menus> {
 
-
-    List<Menus> getAllByUsername(String username);
+//    List<Menus> getAllByUsername(String username);
 
 }

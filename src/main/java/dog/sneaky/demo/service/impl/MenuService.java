@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -58,7 +59,7 @@ public class MenuService {
 
 
     private List<MenuDTO> test() {
-        Iterable<Menus> menus = menusRepository.findAll();
+        Iterable<Menus> menus = menusRepository.getAll();
 //        List<MyMenusDO> myMenus = myMenusDAO.listMenus(null);
         List<MenuDTO> menuDTOS = new ArrayList<>();
         for (Menus myMenu : menus) {
@@ -115,5 +116,16 @@ public class MenuService {
 //        menuSaveORUpdateDTO.setPerms(myMenu.getPerms());
 //        menuSaveORUpdateDTO.setPath(myMenu.getUrl());
         return menuSaveORUpdateDTO;
+    }
+
+
+    public void deleted(Long menusId){
+        Optional<Menus> menus = menusRepository.findById(menusId);
+        menus.ifPresent(it->{
+            Menus entity = new Menus();
+            entity.setId(menusId);
+            entity.setDeleted("Y");
+            menusRepository.save(entity);
+        });
     }
 }

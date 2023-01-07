@@ -37,7 +37,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-8">
-                    <form th:action="@{/role/save}" method="post" class="form-horizontal">
+                    <form th:action="@{/role/save}" method="post" class="form-horizontal" id="add-role-from">
                         <div class="form-group row" >
                             <label for="menusTrees" class="col-sm-2 col-form-label text-right">MenusPerms</label>
                             <div class="col-sm-6">
@@ -47,7 +47,7 @@
                         <div class="form-group row">
                             <label for="roleName" class="col-sm-2 col-form-label text-right">RoleName</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  id="roleName" placeholder="Role Name">
+                                <input type="text" class="form-control" name="roleName"  id="roleName" placeholder="Role Name">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -60,7 +60,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label text-right"></label>
                             <div class="col-sm-10">
-                                <button type="button" sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')" class="btn btn-primary" id="submitBtn">SaveOrUpdate</button>
+                                <button type="submit" sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')" class="btn btn-primary" id="submitBtn">SaveOrUpdate</button>
                             </div>
                         </div>
                     </form>
@@ -72,6 +72,8 @@
 </div>
 <div layout:fragment="pagejs">
     <script src="https://cdn.bootcdn.net/ajax/libs/zTree.v3/3.5.42/js/jquery.ztree.all.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/additional-methods.min.js"></script>
 </div>
 <script layout:fragment="js" th:inline="javascript" >
 
@@ -100,9 +102,7 @@
                 var treeObj = $.fn.zTree.getZTreeObj(treeId);
                 // var status = treeNode.checked;
                 var nodes = treeObj.getCheckedNodes(true);
-
                 console.log(nodes)
-
                 // treeObj.checkAllNodes(false);
                 // treeObj.checkNode(treeNode, status, false);
 
@@ -121,6 +121,38 @@
     $(function () {
 
         $.fn.zTree.init($("#menusTrees"), setting);
+
+        $.validator.setDefaults({
+            submitHandler: function (form) {
+                console.log("Form successful submitted!");
+                loading('submitBtn');
+                form.submit();
+            }
+        });
+
+        $('#add-role-from').validate({
+            rules: {
+                "roleName": {
+                    required: true,
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                if (element.hasClass('select2')) {
+                    error.insertAfter(element.next('span'));
+                } else {
+                    element.closest('.input-group,.input-valid').append(error);
+                }
+            },
+            highlight: function (element, errorClass, validClass) {
+                console.log(element)
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
 
     });
 

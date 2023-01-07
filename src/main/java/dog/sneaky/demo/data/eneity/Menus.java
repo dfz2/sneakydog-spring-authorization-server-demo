@@ -17,6 +17,6 @@ public class Menus extends Identifier<Long> {
     private String menuType;
     private String perms;
     private String url;
-
+    private String deleted;
 
 }

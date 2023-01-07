@@ -82,4 +82,11 @@ public class MenuController {
         return "redirect:/user/menus/list";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER_MENUS_DEL')")
+    @PostMapping("/del")
+    public String delete(Menus menus){
+        menuService.deleted(menus.getId());
+        return "redirect:/user/menus/list";
+    }
+
 }
