@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class RoleController {
+public class RoleController extends BaseController{
     private final RoleService roleService;
 
     private final RoleRepository roleRepository;
@@ -43,9 +43,10 @@ public class RoleController {
         return "role/add";
     }
 
-    @PreAuthorize("hasAuthority('ROLE_USER_ROLW_ADD')")
+    @PreAuthorize("hasAuthority('ROLE_USER_ROLES_ADD')")
     @PostMapping("/role/save")
-    public void save(Role role){
+    public String save(Role role){
         roleRepository.save(role);
+        return redirect("/role/index");
     }
 }

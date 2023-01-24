@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout2.html}">
 <head>
@@ -32,11 +32,11 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <h5 class="card-title">Card title</h5>
-
                     <p class="card-text">
                         Some quick example text to build on the card title and make up the bulk of the card's
                         content.
                     </p>
+                    <input type="text" name="test" class="form-control" /><button class="btn btn-secondary" id="testBtn">test</button>
                     <a href="#" class="card-link">Card link</a>
                     <a href="#" class="card-link">Another link</a>
                 </div>
@@ -71,5 +71,35 @@
         <!-- /.col-md-6 -->
     </div>
 </div>
+
+<div layout:fragment="pagejs">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+</div>
+
+<script layout:fragment="js" th:inline="javascript">
+
+    $(function (){
+
+        $('#testBtn').click(() => handleTestBtn());
+
+        var handleTestBtn = ()=>{
+            $.ajax({
+                url: "/console/postTest",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    "hello": "1233"
+                }),
+                success: function (result) {
+                    alert(result)
+                }
+            });
+        }
+
+    })
+
+</script>
 </body>
 </html>

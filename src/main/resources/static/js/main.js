@@ -1,5 +1,7 @@
 $(function () {
 
+    $(document).ajaxStart(()=>Pace.restart());
+
     let token = $("meta[name='_csrf']").attr("content");
     $.ajaxSetup({
         cache: false,
