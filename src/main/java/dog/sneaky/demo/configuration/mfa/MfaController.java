@@ -8,6 +8,7 @@ import dog.sneaky.demo.data.repository.MenusRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "true")
 public class MfaController extends BaseController {
     private final AuthenticationSuccessHandler successHandler;
     private final MfaService mfaService;

@@ -7,31 +7,16 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import dog.sneaky.demo.configuration.mfa.MfaAuthentication;
-import dog.sneaky.demo.configuration.mfa.MfaAuthenticationHandler;
-import dog.sneaky.demo.configuration.mfa.MfaTrustResolver;
 import jakarta.annotation.Resource;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationManager;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,35 +31,25 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.springframework.security.web.authentication.*;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.session.RequestedUrlRedirectInvalidSessionStrategy;
 import org.springframework.security.web.session.SimpleRedirectSessionInformationExpiredStrategy;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-
-@Slf4j
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
-@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "true")
-public class DefaultSecurityConfiguration {
+@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "false")
+public class DefaultSecurityConfiguration2 {
     @Resource
     private MyUserDetailServiceImpl myUserDetailService;
 
@@ -110,9 +85,7 @@ public class DefaultSecurityConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,
-                                                          AuthorizationManager<RequestAuthorizationContext> mfaAuthorizationManager,
-                                                          final ObjectMapper objectMapper, final ApplicationContext applicationContext)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, final ObjectMapper objectMapper, final ApplicationContext applicationContext)
             throws Exception {
 
 //        http
@@ -160,7 +133,6 @@ public class DefaultSecurityConfiguration {
         http.authenticationProvider(authenticationProvider);
 
 
-        MfaAuthenticationHandler mfaAuthenticationHandler = new MfaAuthenticationHandler("/second-factor.html");
 
         http.authorizeHttpRequests(a -> a.requestMatchers("/login/**", "/login.html",
                         "/register.html",
@@ -182,66 +154,34 @@ public class DefaultSecurityConfiguration {
                         "/actuator/**",
                         "/h2-console/**",
 //                "/actuator/**",
-                        "/favicon.ico").permitAll()
-                        .requestMatchers("/second-factor.html", "/second-factor").access(mfaAuthorizationManager)
-                        .anyRequest().authenticated())
+                        "/favicon.ico").permitAll().anyRequest().authenticated())
                 .formLogin(l -> l.loginPage("/login")
                                 .authenticationDetailsSource(new CustomWebAuthenticationDetailsSource())
                                 .usernameParameter("j_username")
                                 .passwordParameter("j_password")
 //                        .successHandler(new Custom2UrlAuthenticationSuccessHandler(applicationContext))
-//                                .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
-//                                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"))
-                                .successHandler(mfaAuthenticationHandler)
-                                .failureHandler(mfaAuthenticationHandler)
-                ).requestCache(rc -> rc.requestCache(new CustomRequestCache()))
-                .exceptionHandling((exceptions) -> exceptions
-                        .withObjectPostProcessor(new ObjectPostProcessor<ExceptionTranslationFilter>() {
-                            @Override
-                            public <O extends ExceptionTranslationFilter> O postProcess(O filter) {
-                                filter.setAuthenticationTrustResolver(new MfaTrustResolver());
-                                return filter;
-                            }
-                        })
+                                .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+                                .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error"))
                 )
-                .securityContext((context) -> context.requireExplicitSave(false))
                 .rememberMe(
                         rm -> rm.rememberMeParameter("customerDTO[remember]")
                                 .tokenValiditySeconds(3600)
                                 .userDetailsService(myUserDetailService)
 //                        .tokenRepository(persistentTokenRepository())
                 )
-//                .csrf(c -> c.csrfTokenRepository(new CookieCsrfTokenRepository()))
-                .logout(lo -> lo.logoutSuccessUrl("/login?logout")
+                .csrf(c -> c.csrfTokenRepository(new CookieCsrfTokenRepository()))
+                .logout(lo -> lo.logoutSuccessUrl("/login")
                         .deleteCookies("authorization-server-session-id")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true))
                 .sessionManagement()
-//                .invalidSessionUrl("/invalidate?invalidate")
-                .invalidSessionStrategy(new RequestedUrlRedirectInvalidSessionStrategy())
+                .invalidSessionUrl("/invalidate")
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false) // / 当达到最大值时，是否保留已经登录的用户
                 .expiredSessionStrategy(new SimpleRedirectSessionInformationExpiredStrategy("/login?maximumSessions"))
-                .expiredUrl("/login?expiredUrl");
+                .expiredUrl("/login");
 
         return http.build();
-    }
-
-    @Bean
-    AuthenticationSuccessHandler successHandler() {
-        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-        successHandler.setTargetUrlParameter("continue");
-        return successHandler;
-    }
-
-    @Bean
-    AuthenticationFailureHandler failureHandler() {
-        return new SimpleUrlAuthenticationFailureHandler("/login?error");
-    }
-
-    @Bean
-    AuthorizationManager<RequestAuthorizationContext> mfaAuthorizationManager() {
-        return (authentication, context) -> new AuthorizationDecision(authentication.get() instanceof MfaAuthentication);
     }
 
 
@@ -300,6 +240,4 @@ public class DefaultSecurityConfiguration {
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
-
-
 }
