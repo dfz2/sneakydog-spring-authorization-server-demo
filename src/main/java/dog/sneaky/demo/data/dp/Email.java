@@ -1,4 +1,4 @@
-package dog.sneaky.demo.data;
+package dog.sneaky.demo.data.dp;
 
 
 import lombok.Value;

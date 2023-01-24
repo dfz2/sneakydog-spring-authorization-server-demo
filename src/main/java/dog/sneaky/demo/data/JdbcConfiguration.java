@@ -30,10 +30,9 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableJdbcAuditing(auditorAwareRef = "auditorAwareRef")
-@EnableJdbcRepositories(namedQueriesLocation = "classpath:META-INF/jdbc-named-queries.properties", basePackages = "dog.sneaky.demo.data.repository", repositoryBaseClass = BaseRepositoryImpl.class)
+@EnableJdbcRepositories(basePackages = "dog.sneaky.demo.data.repository", repositoryBaseClass = BaseRepositoryImpl.class)
 @Order(3)
 public class JdbcConfiguration extends AbstractJdbcConfiguration {
-
 
 //    @Primary
 //    @Bean
@@ -42,7 +41,8 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
 //        return DataSourceBuilder.create().build();
 //    }
 
-    @SuppressWarnings("rawtypes")
+
+    @SuppressWarnings(value = "unchecked")
     @Override
     protected List<?> userConverters() {
         return new Reflections("dog.sneaky.demo.data.converters")
@@ -75,7 +75,7 @@ public class JdbcConfiguration extends AbstractJdbcConfiguration {
     }
 
     @Bean
-    public <T extends Identifier<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
+    public <T extends EntityID<Long>> BeforeConvertCallback<T> beforeConvertCallbackRef() {
        return aggregate -> {
            if (ObjectUtils.isEmpty(aggregate.getId())) {
                aggregate.setId(IdUtil.getSnowflakeNextId());

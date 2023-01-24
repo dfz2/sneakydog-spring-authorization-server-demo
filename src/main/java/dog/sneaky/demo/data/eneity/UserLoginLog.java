@@ -1,6 +1,6 @@
 package dog.sneaky.demo.data.eneity;
 
-import dog.sneaky.demo.data.Identifier;
+import dog.sneaky.demo.data.EntityID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @Table("logs")
 @ToString(callSuper = true)
-public class UserLoginLog extends Identifier<Long> {
+public class UserLoginLog extends EntityID<Long> {
 
     private String username;
     private String ipAddress;

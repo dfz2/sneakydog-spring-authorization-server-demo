@@ -1,16 +1,15 @@
 package dog.sneaky.demo.data.eneity;
 
-import dog.sneaky.demo.data.Identifier;
+import dog.sneaky.demo.data.EntityID;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 
 @Getter
 @Setter
 @Table("menus")
-public class Menus extends Identifier<Long> {
+public class Menus extends EntityID<Long> {
 
     private Long parentId;
     private String menuName;

@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 @Getter
 @Setter
 @ToString
-public abstract class Identifier<T> {
+public abstract class EntityID<T> {
     @Id
     private T id;
 

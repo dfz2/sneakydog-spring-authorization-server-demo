@@ -1,6 +1,6 @@
 package dog.sneaky.demo.data.converters;
 
-import dog.sneaky.demo.data.Email;
+import dog.sneaky.demo.data.dp.Email;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 

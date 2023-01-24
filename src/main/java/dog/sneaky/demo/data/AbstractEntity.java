@@ -16,7 +16,7 @@ import java.time.Instant;
  */
 @Getter
 @Setter
-public abstract class AbstractEntity extends Identifier<Long> implements Serializable  {
+public abstract class AbstractEntity extends EntityID<Long> implements Serializable  {
 
     @CreatedDate
     private Instant createdAt;

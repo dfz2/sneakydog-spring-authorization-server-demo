@@ -32,7 +32,7 @@ public class IPUtil {
     public static String getAddressByIP(String ip) {
         String address = "UNKNOW";
         ResponseEntity<Map> re = RESTTEMPLATE.getForEntity(String.format(IP_TAOBAO_URL, ip), Map.class);
-        if (re.getStatusCodeValue() == 200 && re.getBody() != null) {
+        if (re.getStatusCode().value() == 200 && re.getBody() != null) {
             Map jsonObject = re.getBody();
             if (jsonObject.containsKey("data")) {
                 LinkedHashMap<String, String> data = (LinkedHashMap<String, String>) jsonObject.get("data");
