@@ -3,7 +3,7 @@ package dog.sneaky.demo.controllers;
 
 import dog.sneaky.demo.controllers.controller.dto.ForgotPasswordCommand;
 import dog.sneaky.demo.controllers.controller.dto.RecoverPasswordCommand;
-import dog.sneaky.demo.service.impl.UserServiceImpl;
+import dog.sneaky.demo.services.impl.UserServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;

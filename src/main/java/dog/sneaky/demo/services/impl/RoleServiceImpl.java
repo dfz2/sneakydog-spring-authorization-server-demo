@@ -1,8 +1,8 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.services.impl;
 
 import dog.sneaky.demo.controllers.controller.dto.RoleDTO;
 import dog.sneaky.demo.data.repository.RoleRepository;
-import dog.sneaky.demo.service.RoleService;
+import dog.sneaky.demo.services.RoleService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

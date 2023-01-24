@@ -1,8 +1,8 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.services.impl;
 
 import dog.sneaky.demo.data.eneity.UserLoginLog;
 import dog.sneaky.demo.data.repository.UserLoginLogRepository;
-import dog.sneaky.demo.service.LogsService;
+import dog.sneaky.demo.services.LogsService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

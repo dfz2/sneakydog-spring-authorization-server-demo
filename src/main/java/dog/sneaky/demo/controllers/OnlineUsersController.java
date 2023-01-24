@@ -2,7 +2,7 @@ package dog.sneaky.demo.controllers;
 
 
 import dog.sneaky.demo.controllers.controller.dto.OnlineUsersDTO;
-import dog.sneaky.demo.service.impl.OnlineUsersService;
+import dog.sneaky.demo.services.impl.OnlineUsersService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -3,7 +3,7 @@ package dog.sneaky.demo.controllers;
 
 import dog.sneaky.demo.data.eneity.CustomUser;
 import dog.sneaky.demo.data.repository.CustomUserRepository;
-import dog.sneaky.demo.service.UserService;
+import dog.sneaky.demo.services.UserService;
 import groovy.util.logging.Slf4j;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

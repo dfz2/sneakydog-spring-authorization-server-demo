@@ -1,4 +1,4 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.services.impl;
 
 import dog.sneaky.demo.common.ClientNotFoundException;
 import dog.sneaky.demo.common.DefaultObjectMapper;

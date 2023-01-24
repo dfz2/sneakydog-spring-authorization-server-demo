@@ -1,7 +1,7 @@
 package dog.sneaky.demo.controllers;
 
 
-import dog.sneaky.demo.service.impl.MyAppService;
+import dog.sneaky.demo.services.impl.MyAppService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

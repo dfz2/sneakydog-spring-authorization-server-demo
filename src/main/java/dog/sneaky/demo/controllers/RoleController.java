@@ -1,11 +1,9 @@
 package dog.sneaky.demo.controllers;
 
 
-import dog.sneaky.demo.controllers.controller.dto.RoleDTO;
-import dog.sneaky.demo.controllers.controller.dto.RoleSaveOrUpdateCommand;
 import dog.sneaky.demo.data.eneity.Role;
 import dog.sneaky.demo.data.repository.RoleRepository;
-import dog.sneaky.demo.service.RoleService;
+import dog.sneaky.demo.services.RoleService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

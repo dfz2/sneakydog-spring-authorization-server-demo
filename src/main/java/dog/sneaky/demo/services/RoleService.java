@@ -1,4 +1,4 @@
-package dog.sneaky.demo.service;
+package dog.sneaky.demo.services;
 
 import dog.sneaky.demo.controllers.controller.dto.RoleDTO;
 

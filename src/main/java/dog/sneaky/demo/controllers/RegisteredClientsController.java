@@ -5,7 +5,7 @@ import dog.sneaky.demo.common.UuidGenerator;
 import dog.sneaky.demo.common.ValidForm;
 import dog.sneaky.demo.controllers.controller.dto.RegisteredClientsDTO;
 import dog.sneaky.demo.controllers.controller.dto.ResetClientSecretCommand;
-import dog.sneaky.demo.service.impl.RegisteredClientsService;
+import dog.sneaky.demo.services.impl.RegisteredClientsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;

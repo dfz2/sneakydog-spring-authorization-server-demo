@@ -2,7 +2,7 @@ package dog.sneaky.demo.controllers;
 
 
 import dog.sneaky.demo.controllers.controller.dto.UserProfileDTO;
-import dog.sneaky.demo.service.LogsService;
+import dog.sneaky.demo.services.LogsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

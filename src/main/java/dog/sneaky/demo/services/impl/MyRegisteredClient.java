@@ -1,4 +1,4 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.services.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

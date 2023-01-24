@@ -1,4 +1,4 @@
-package dog.sneaky.demo.service.impl;
+package dog.sneaky.demo.services.impl;
 
 import dog.sneaky.demo.controllers.controller.dto.RecoverPasswordCommand;
 import dog.sneaky.demo.controllers.controller.dto.UserDTO;
@@ -6,7 +6,7 @@ import dog.sneaky.demo.data.eneity.CustomUser;
 import dog.sneaky.demo.data.eneity.UserRoleRef;
 import dog.sneaky.demo.data.repository.CustomUserRepository;
 import dog.sneaky.demo.data.repository.UserRoleRefRepository;
-import dog.sneaky.demo.service.UserService;
+import dog.sneaky.demo.services.UserService;
 import groovy.util.logging.Slf4j;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -5,7 +5,7 @@ import dog.sneaky.demo.controllers.controller.dto.MenuDTO;
 import dog.sneaky.demo.controllers.controller.dto.ZtreeDTO;
 import dog.sneaky.demo.data.eneity.Menus;
 import dog.sneaky.demo.data.repository.MenusRepository;
-import dog.sneaky.demo.service.impl.MenuService;
+import dog.sneaky.demo.services.impl.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
