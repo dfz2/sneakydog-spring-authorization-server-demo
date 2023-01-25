@@ -1,15 +1,38 @@
 version: "3"
 
 services:
+  mysqldb2:
+    hostname: mysqldb2
+    image: mysql
+    container_name: mysqldb2
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: test
+    volumes:
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+  redisdb2:
+    hostname: redis2
+    container_name: "redis2"
+    image: redis:latest
+    restart: on-failure
+    command: redis-server --requirepass 123456 --appendonly yes
   sneakydog-spring-authorization-server-demo:
     container_name: "sneakydog_oauth2_8081"
     image: "sneakydog-spring-authorization-server-demo:latest"
+    depends_on:
+      mysqldb2:
+          condition: service_healthy
+      redisdb2:
+        condition: service_started
     ports:
       - "9999:9008"
     environment:
       - "env=staging"
 
-networks:
-  default:
-    external:
-      name: dev-local

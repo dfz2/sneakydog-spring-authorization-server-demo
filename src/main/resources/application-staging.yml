@@ -11,12 +11,12 @@ spring:
     redis:
       repositories:
         enabled: false
-      host: redis
+      host: redis2
       port: 6379
       password: 123456
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://mysqldb:3306/test"
+    url: "jdbc:mysql://mysqldb2:3306/test"
     username: root
     password: 123456
   captcha:
