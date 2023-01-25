@@ -1,41 +1,48 @@
-package dog.sneaky.demo.controllers;
+package dog.sneaky.demo.configuration.login3;
 
 
 import dog.sneaky.demo.configuration.KeyGeneratorUtils;
 import dog.sneaky.demo.configuration.mfa.MfaAuthentication;
-import dog.sneaky.demo.configuration.mfa.MfaAuthenticationHandler;
+import dog.sneaky.demo.controllers.BaseController;
 import dog.sneaky.demo.controllers.controller.dto.LocalLoginDTO;
+import dog.sneaky.demo.data.eneity.CustomUser;
+import dog.sneaky.demo.data.repository.CustomUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Key;
 import java.security.KeyPair;
+import java.util.Optional;
 import java.util.UUID;
-
 
 @Slf4j
 @Controller
-public class LoginController {
-
+@RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "spring.security.login" , name = "type", havingValue = "login3")
+public class Login3Controller extends BaseController {
     @Value("${spring.captcha.enabled:false}")
     private boolean springSecurityCaptchaEnabled;
     @Autowired
     private LocalLoginDTO localLoginDTO;
 
-
+    private final CustomUserRepository customUserRepository;
 
     @GetMapping({"/login", "/login.html"})
-    public String login(Model model, HttpServletRequest request) {
+    public String login3(Model model, HttpServletRequest request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)&& !(authentication instanceof MfaAuthentication)) {
             log.info("用户[" + authentication.getName() + "]已经登录");
@@ -65,11 +72,28 @@ public class LoginController {
             model.addAttribute("SPRING_SECURITY_CAPTCHA_ENABLED", springSecurityCaptchaEnabled);
             session.setAttribute(publicKeyBase64, privateKeyBase64);
 
-            return "login2";
+            return "login3";
 
         }
-
     }
 
+    @PostMapping({"/login3", "/login3.html"})
+    public String login333(Model model, HttpServletRequest request, RedirectAttributes redirectAttributes){
+        String jUsername = request.getParameter("j_username");
+        Optional<CustomUser> userByUsername = customUserRepository.getUserByUsername(jUsername);
+        if (userByUsername.isEmpty()){
+            return redirect("login?error");
+        }
 
+        redirectAttributes.addFlashAttribute("login3", "asetataett");
+        redirectAttributes.addFlashAttribute("lgoinuid", jUsername);
+        return redirect("login");
+    }
+
+    @GetMapping("/pwderror")
+    public String pwderror(HttpServletRequest request,RedirectAttributes redirectAttributes){
+        String jUsername = request.getParameter("j_username");
+        redirectAttributes.addFlashAttribute("lgoinuid", jUsername);
+        return redirect("login?error");
+    }
 }

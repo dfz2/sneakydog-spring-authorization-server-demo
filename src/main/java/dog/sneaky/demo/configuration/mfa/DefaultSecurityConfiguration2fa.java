@@ -1,7 +1,8 @@
-package dog.sneaky.demo.configuration;
+package dog.sneaky.demo.configuration.mfa;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dog.sneaky.demo.configuration.*;
 import dog.sneaky.demo.configuration.mfa.MfaAuthentication;
 import dog.sneaky.demo.configuration.mfa.MfaAuthenticationHandler;
 import dog.sneaky.demo.configuration.mfa.MfaTrustResolver;
@@ -35,8 +36,8 @@ import org.springframework.security.web.session.SimpleRedirectSessionInformation
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
-@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "true")
-public class DefaultSecurityConfiguration2fa extends AbstractSecurityConfiguration{
+@ConditionalOnProperty(prefix = "spring.security.login" , name = "type", havingValue = "mfa")
+public class DefaultSecurityConfiguration2fa extends AbstractSecurityConfiguration {
     @Resource
     private MyUserDetailServiceImpl myUserDetailService;
 

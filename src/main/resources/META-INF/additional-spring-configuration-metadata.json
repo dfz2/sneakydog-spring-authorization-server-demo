@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.security.login.type",
+      "type": "dog.sneaky.demo.common.ELoginType",
+      "description": "Description for spring.security.login.type."
+  }
+] }

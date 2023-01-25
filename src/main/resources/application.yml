@@ -15,7 +15,8 @@ server:
 
 spring:
   security:
-    enable2fa: true
+    login:
+      type: login3
   profiles:
     active: local
   application:

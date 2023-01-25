@@ -25,7 +25,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "true")
+@ConditionalOnProperty(prefix = "spring.security.login" , name = "type", havingValue = "mfa")
 public class MfaController extends BaseController {
     private final AuthenticationSuccessHandler successHandler;
     private final MfaService mfaService;

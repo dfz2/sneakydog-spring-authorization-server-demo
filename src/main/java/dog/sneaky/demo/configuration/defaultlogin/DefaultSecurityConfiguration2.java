@@ -1,4 +1,4 @@
-package dog.sneaky.demo.configuration;
+package dog.sneaky.demo.configuration.defaultlogin;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import dog.sneaky.demo.configuration.AbstractSecurityConfiguration;
+import dog.sneaky.demo.configuration.CustomWebAuthenticationDetailsSource;
+import dog.sneaky.demo.configuration.MyDaoAuthenticationProvider;
+import dog.sneaky.demo.configuration.MyUserDetailServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -48,8 +52,8 @@ import java.util.UUID;
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
-@ConditionalOnProperty(prefix = "spring.security" , name = "enable2fa", havingValue = "false")
-public class DefaultSecurityConfiguration2 extends AbstractSecurityConfiguration{
+@ConditionalOnProperty(prefix = "spring.security.login" , name = "type", havingValue = "defaults")
+public class DefaultSecurityConfiguration2 extends AbstractSecurityConfiguration {
     @Resource
     private MyUserDetailServiceImpl myUserDetailService;
 

@@ -5,6 +5,7 @@ import dog.sneaky.demo.data.rowmappers.CustomUserRowMapper;
 import dog.sneaky.demo.data.rowmappers.SimpleGrantedAuthorityRowMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,8 +28,13 @@ class CustomizedCustomUserQueryImpl implements CustomizedCustomUserQuery<CustomU
     @Override
     public Optional<CustomUser> getUserByUsername(String username) {
         String sql = "SELECT * FROM users WHERE enabled = '1' AND username = :username";
-        CustomUser customUser = namedParameterJdbcTemplate.queryForObject(sql, Map.of("username", username), new CustomUserRowMapper());
-        return Optional.ofNullable(customUser);
+        try {
+            CustomUser customUser = namedParameterJdbcTemplate.queryForObject(sql, Map.of("username", username), new CustomUserRowMapper());
+            return Optional.ofNullable(customUser);
+        } catch (EmptyResultDataAccessException e){
+            log.debug("username["+username+"] not found!!");
+            return Optional.empty();
+        }
     }
 
     @Override
