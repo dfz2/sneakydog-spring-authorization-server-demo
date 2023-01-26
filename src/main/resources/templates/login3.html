@@ -17,6 +17,9 @@
     .CAPTCHACode span{
       padding-left: 9px;
     }
+    .form-control{
+      padding: 0;
+    }
 
   </style>
   <script th:inline="javascript">
@@ -49,32 +52,33 @@
         <input type="hidden" id="_satoken" name="_satoken" th:value="${publicKey}">
 
         <th:block th:if="${#strings.isEmpty(lgoinuid) and #strings.isEmpty(pwderror) }" >
-          <div class="input-group mb-3">
-            <input type="email" class="form-control" th:value="${ #strings.isEmpty(SPRING_SECURITY_LAST_USERNAME) ? localLoginDTO.username : SPRING_SECURITY_LAST_USERNAME}" name="j_username" placeholder="Email"
+          <label>Login</label>
+          <div class="input-group mb-1">
+            <input type="email" class="form-control form-control-border" th:value="${ #strings.isEmpty(SPRING_SECURITY_LAST_USERNAME) ? localLoginDTO.username : SPRING_SECURITY_LAST_USERNAME}" name="j_username" placeholder="Email"
                    autocomplete="off">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
-              </div>
-            </div>
           </div>
+
+          <p class="mb-0">
+            <a th:href="@{/register.html}" class="text-center">Register a new membership</a>
+          </p>
+
         </th:block>
 
 
-
         <th:block th:if="${!#strings.isEmpty(lgoinuid) or !#strings.isEmpty(pwderror)}" >
-          <a th:href="@{/login}" class="text-center"><i class="fa fa-arrow-left"></i>  [[${lgoinuid}]]<br/></a>
+<!--          <a th:href="@{/login}" class="text-center"><i class="fa fa-arrow-left"></i>  [[${lgoinuid}]]<br/></a>-->
           <input type="hidden" th:value="${lgoinuid}" name="j_username" autocomplete="off">
-          <b>Enter password</b>
-          <div class="input-group mb-3">
+          <label>Enter password</label>
+          <div class="input-group mb-1">
             <input type="hidden" id="npassword"  name="j_password">
-            <input type="password" id="password2" th:value="${localLoginDTO.password}" class="form-control" maxlength="25" placeholder="Password" autocomplete="off">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
+            <input type="password" id="password2" th:value="${localLoginDTO.password}" class="form-control form-control-border" maxlength="25" placeholder="Password" autocomplete="off">
           </div>
+
+          <p class="mb-1">
+            <a th:href="@{/forgot-password.html}">I forgot my password</a>
+          </p>
+
+
         </th:block>
 
 
@@ -86,13 +90,6 @@
             <img th:src="@{/kaptcha/code}" id="CAPTCHAimg" style="margin-top: 2px;width:136px;height:35px;cursor: pointer;overflow: hidden" >
           </div>
         </div>
-
-        <p class="mb-1">
-          <a th:href="@{/forgot-password.html}">I forgot my password</a>
-        </p>
-        <p class="mb-0">
-          <a th:href="@{/register.html}" class="text-center">Register a new membership</a>
-        </p>
 
         <br/>
         <div class="row">
