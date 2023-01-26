@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="utf-8">
   <meta name="author" content="sneakydog">
@@ -17,6 +17,7 @@
     .CAPTCHACode span{
       padding-left: 9px;
     }
+
   </style>
   <script th:inline="javascript">
     /*<![CDATA[*/ const baseURL = /*[[@{/}]]*/ ''; /*]]>*/
@@ -59,12 +60,12 @@
           </div>
         </th:block>
 
+
+
         <th:block th:if="${!#strings.isEmpty(lgoinuid) or !#strings.isEmpty(pwderror)}" >
-          <div class="input-group mb-3">
-            <input type="hidden" th:value="${lgoinuid}" name="j_username" autocomplete="off">
-          </div>
-          <p th:text="${lgoinuid}"></p>
-          Enter password
+          <a th:href="@{/login}" class="text-center"><i class="fa fa-arrow-left"></i>  [[${lgoinuid}]]<br/></a>
+          <input type="hidden" th:value="${lgoinuid}" name="j_username" autocomplete="off">
+          <b>Enter password</b>
           <div class="input-group mb-3">
             <input type="hidden" id="npassword"  name="j_password">
             <input type="password" id="password2" th:value="${localLoginDTO.password}" class="form-control" maxlength="25" placeholder="Password" autocomplete="off">
@@ -95,7 +96,7 @@
 
         <br/>
         <div class="row">
-          <div class="col-8">
+          <div class="col-7">
             <div class="icheck-primary">
 <!--              <input type="checkbox" name="customerDTO[remember]" value="1" id="remember">-->
               <label>
@@ -103,8 +104,8 @@
               </label>
             </div>
           </div>
-          <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block" id="submitBtn" th:text="${#strings.isEmpty(lgoinuid)? 'next': 'Sign In' }">Sign In</button>
+          <div class="col-5">
+            <button type="submit" class="btn btn-primary btn-block"  data-toggle="button" aria-pressed="true" id="submitBtn" th:text="${#strings.isEmpty(lgoinuid)? 'next': 'Sign In' }">Sign In</button>
           </div>
         </div>
 
@@ -125,16 +126,17 @@
 <script th:inline="javascript">
 
   let handleBeforeSubmit = () => {
-    var satokenel = document.getElementById('_satoken');
-    let encrypt = new JSEncrypt();
-    encrypt.setPublicKey(satokenel.value);
     var password2el = document.getElementById('password2');
-    var npasswordValue = encrypt.encrypt(password2el.value);
-    var npasswordel = document.getElementById('npassword');
-    npasswordel.value = npasswordValue
+    if (password2el) {
+      var satokenel = document.getElementById('_satoken');
+      let encrypt = new JSEncrypt();
+      encrypt.setPublicKey(satokenel.value);
+      var npasswordValue = encrypt.encrypt(password2el.value);
+      var npasswordel = document.getElementById('npassword');
+      npasswordel.value = npasswordValue
+    }
     return true;
   }
-
 
 
 
@@ -189,20 +191,25 @@
       }
     });
 
-    $("#password2").rules("add", {
-      required: true,
-      minlength: 16,
-      maxlength: 25,
-      messages: {
-        required: "Please provide a password.",
-        minlength: "Your password must be at least 16 characters long"
-      }
-    });
+
+    const pwd2 = $("#password2");
+    if (pwd2.length > 0){
+      pwd2.rules("add", {
+        required: true,
+        minlength: 16,
+        maxlength: 25,
+        messages: {
+          required: "Please provide a password.",
+          minlength: "Your password must be at least 16 characters long"
+        }
+      });
+    }
+
 
     function loading(elid) {
-      var el = $("#" + elid);
+      const el = $("#" + elid);
       el.prop("disabled", true);
-      el.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> loading...`);
+      el.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>loading...`);
     }
 
   });
