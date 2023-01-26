@@ -156,9 +156,35 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <mainClass>dog.sneaky.demo.SneakydogSpringAuthorizationServerDemoApplication</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.2</version>
+                <executions>  <!--执行器 mvn assembly:assembly-->
+                    <execution>
+                        <id>make-zip</id> <!--名字任意 -->
+                        <phase>package</phase><!-- 绑定到package生命周期阶段上 -->
+                        <goals>
+                            <goal>single</goal><!-- 只运行一次 -->
+                        </goals>
+                        <configuration>
+                            <descriptors> <!--描述文件路径-->
+                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

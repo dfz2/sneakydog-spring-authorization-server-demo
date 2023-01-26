@@ -24,8 +24,10 @@ services:
     restart: on-failure
     command: redis-server --requirepass 123456 --appendonly yes
   sneakydog-spring-authorization-server-demo:
-    container_name: "sneakydog_oauth2_8081"
+    container_name: "sneakydog-spring-authorization-server-demo"
     image: "sneakydog-spring-authorization-server-demo:latest"
+    volumes:
+      - "./appdata:/app:rw"
     depends_on:
       mysqldb2:
           condition: service_healthy
