@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Roles Modal Examples</title>
+    <link rel="stylesheet" th:href="@{/css/ztree.css}">
+    <style>
+        .ztree {
+            margin-top: 6px;
+        }
+        .ztree li a.curSelectedNode{
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="card">
+        <div class="card-header  card-outline">
+            <h3 class="card-title">
+                <i class="fas fa-edit"></i>角色授权
+            </h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <form th:action="@{/role/save}" method="post" class="form-horizontal" id="add-role-from">
+                        <div class="form-group row" >
+                            <label for="menusTrees" class="col-sm-2 col-form-label text-right"></label>
+                            <div class="col-sm-6">
+                                <ul id="menusTrees" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div layout:fragment="pagejs">
+    <script src="https://cdn.bootcdn.net/ajax/libs/zTree.v3/3.5.42/js/jquery.ztree.all.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-validate/1.9.0/additional-methods.min.js"></script>
+</div>
+<script layout:fragment="js" th:inline="javascript" >
+
+    const setting = {
+        view: {
+            addHoverDom: false,
+            removeHoverDom: false,
+            selectedMulti: false
+        },
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        edit: {
+            enable: false
+        },
+        callback: {
+            beforeClick: function () {
+                return true;
+            },
+            onCheck: function (e, treeId, treeNode) {
+                var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                // var status = treeNode.checked;
+                var nodes = treeObj.getCheckedNodes(true);
+                console.log(nodes)
+                // treeObj.checkAllNodes(false);
+                // treeObj.checkNode(treeNode, status, false);
+
+            },
+            onAsyncSuccess: function (e, treeId, treeNode, msg) {
+                var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                var  testv = [[${menusList}]];
+                for(var p in testv){
+                    var nodeTree = treeObj.getNodeByParam("id", testv[p]);
+                    treeObj.checkNode(nodeTree, true, false);
+                }
+
+                treeObj.expandAll(true);
+            }
+        },
+        async: {
+            enable: true,
+            type: "get",
+            url: "/role/menus/ztrees"
+        }
+    };
+
+    $(function () {
+
+        $.fn.zTree.init($("#menusTrees"), setting);
+
+        let getZtreeCheckedDatas = () => {
+            var treeObj = $.fn.zTree.getZTreeObj('menusTrees');
+            // var status = treeNode.checked;
+            var nodes = treeObj.getCheckedNodes(true);
+            var idsDatas = [];
+            for(var p in nodes){
+                console.log(nodes[p].id)
+                idsDatas.push(nodes[p].id)
+            }
+        }
+
+    });
+
+</script>
+</body>
+</html>

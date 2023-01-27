@@ -112,9 +112,14 @@
     })
 
     function operateFormatter(value, row, index) {
+        let opts = [];
         if([[${#authorization.expression('hasAuthority("ROLE_USER_ROLES_EDIT")')}]]) {
-            return [ '<a href="/roles/'+row.id+'/edit" class="btn btn-sm btn-secondary" title="修改权限"><i class="fas fa-edit"></i></a>',].join('');
+            opts.push('<a href="/roles/'+row.id+'/edit" class="btn btn-sm btn-secondary" title="修改"><i class="fas fa-edit"></i></a>')
         }
+        if([[${#authorization.expression('hasAuthority("ROLE_USER_ROLES_AUTHORIZE_VIEW")')}]]) {
+            opts.push('<a href="/roles/'+row.id+'/authorize/view" class="btn btn-sm btn-secondary" title="授权"><i class="fas fa-award"></i></a>')
+        }
+        return opts.join('  ');
     }
 </script>
 

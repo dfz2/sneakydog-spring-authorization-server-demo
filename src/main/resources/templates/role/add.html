@@ -38,12 +38,7 @@
             <div class="row">
                 <div class="col-8">
                     <form th:action="@{/role/save}" method="post" class="form-horizontal" id="add-role-from">
-                        <div class="form-group row" >
-                            <label for="menusTrees" class="col-sm-2 col-form-label text-right">MenusPerms</label>
-                            <div class="col-sm-6">
-                                <ul id="menusTrees" class="ztree"></ul>
-                            </div>
-                        </div>
+                        <input type="hidden" name="id" th:value="${role.id}"/>
                         <div class="form-group row">
                             <label for="roleName" class="col-sm-2 col-form-label text-right">RoleName</label>
                             <div class="col-sm-6">
@@ -77,58 +72,11 @@
 </div>
 <script layout:fragment="js" th:inline="javascript" >
 
-    const setting = {
-        view: {
-            addHoverDom: false,
-            removeHoverDom: false,
-            selectedMulti: false
-        },
-        check: {
-            enable: true
-        },
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        edit: {
-            enable: false
-        },
-        callback: {
-            beforeClick: function () {
-                return true;
-            },
-            onCheck: function (e, treeId, treeNode) {
-                var treeObj = $.fn.zTree.getZTreeObj(treeId);
-                // var status = treeNode.checked;
-                var nodes = treeObj.getCheckedNodes(true);
-                console.log(nodes)
-                // treeObj.checkAllNodes(false);
-                // treeObj.checkNode(treeNode, status, false);
-
-            },
-            onAsyncSuccess: function (e, treeId, treeNode, msg) {
-                var treeObj = $.fn.zTree.getZTreeObj(treeId);
-                var  testv = [[${menusList}]];
-                for(var p in testv){
-                    var nodeTree = treeObj.getNodeByParam("id", testv[p]);
-                    treeObj.checkNode(nodeTree, true, false);
-                }
-            }
-        },
-        async: {
-            enable: true,
-            type: "get",
-            url: "/role/menus/ztrees"
-        }
-    };
-
     $(function () {
-
-        $.fn.zTree.init($("#menusTrees"), setting);
 
         $.validator.setDefaults({
             submitHandler: function (form) {
+                console.log(form)
                 console.log("Form successful submitted!");
                 loading('submitBtn');
                 form.submit();

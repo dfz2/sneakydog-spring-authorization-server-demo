@@ -13,4 +13,5 @@ public class Role extends EntityID<Long> {
 
     private String roleName;
     private String remark;
+
 }

@@ -4,11 +4,14 @@ package dog.sneaky.demo.controllers;
 import dog.sneaky.demo.common.ZtreeDTO;
 import dog.sneaky.demo.data.eneity.Menus;
 import dog.sneaky.demo.data.eneity.Role;
+import dog.sneaky.demo.data.eneity.RoleMenusRef;
 import dog.sneaky.demo.data.repository.MenusRepository;
+import dog.sneaky.demo.data.repository.RoleMenusRefRepository;
 import dog.sneaky.demo.data.repository.RoleRepository;
 import dog.sneaky.demo.services.RoleService;
 import dog.sneaky.demo.services.impl.MenuService;
 import groovy.util.logging.Slf4j;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,9 +37,9 @@ import java.util.function.Supplier;
 public class RoleController extends BaseController{
     private final RoleService roleService;
     private final MenuService menuService;
-
     private final MenusRepository menusRepository;
     private final RoleRepository roleRepository;
+    private final RoleMenusRefRepository roleMenusRefRepository;
 
     @PreAuthorize("hasAuthority('ROLE_USER_ROLES')")
     @GetMapping("/role/index")
@@ -85,13 +88,29 @@ public class RoleController extends BaseController{
         return "role/add";
     }
 
+
+
+    @PreAuthorize("hasAuthority('ROLE_USER_ROLES_AUTHORIZE_VIEW')")
+    @GetMapping("/roles/{roleId}/authorize/view")
+    public String authorizeview(@PathVariable("roleId") Long roleId, Model model){
+        List<RoleMenusRef> allByRoleId = roleMenusRefRepository.findAllByRoleId(roleId);
+        List<Long> menusList2 = new ArrayList<>();
+        for (RoleMenusRef menus : allByRoleId) {
+            menusList2.add(menus.getMenuId());
+        }
+        model.addAttribute("menusList", menusList2);
+        return "role/authorize";
+    }
+
+
+
+
     @PreAuthorize("hasAuthority('ROLE_USER_ROLES_ADD')")
     @PostMapping("/role/save")
     public String save(Role role){
         roleRepository.save(role);
         return redirect("/role/index");
     }
-
 
 
 
