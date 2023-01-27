@@ -16,7 +16,7 @@ server:
 spring:
   security:
     login:
-      type: login3
+      type: login4
   profiles:
     active: local
   application:
