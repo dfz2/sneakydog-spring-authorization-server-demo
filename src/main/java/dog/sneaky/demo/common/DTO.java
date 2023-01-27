@@ -1,4 +1,4 @@
-package dog.sneaky.demo.controllers.controller.dto;
+package dog.sneaky.demo.common;
 
 
 import lombok.Getter;

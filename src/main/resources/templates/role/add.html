@@ -47,13 +47,13 @@
                         <div class="form-group row">
                             <label for="roleName" class="col-sm-2 col-form-label text-right">RoleName</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="roleName"  id="roleName" placeholder="Role Name">
+                                <input type="text" class="form-control" name="roleName" th:value="${role.roleName}"  id="roleName" placeholder="Role Name">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="remark" class="col-sm-2 col-form-label text-right">Remark</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  id="remark" placeholder="Remark">
+                                <input type="text" class="form-control"  id="remark" th:value="${role.remark}"   placeholder="Remark">
                             </div>
                         </div>
                         <hr sec:authorize="hasAuthority('ROLE_USER_ROLES_SAVE')"/>
@@ -108,13 +108,18 @@
 
             },
             onAsyncSuccess: function (e, treeId, treeNode, msg) {
-
+                var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                var  testv = [[${menusList}]];
+                for(var p in testv){
+                    var nodeTree = treeObj.getNodeByParam("id", testv[p]);
+                    treeObj.checkNode(nodeTree, true, false);
+                }
             }
         },
         async: {
             enable: true,
             type: "get",
-            url: "/user/menus/ztrees"
+            url: "/role/menus/ztrees"
         }
     };
 

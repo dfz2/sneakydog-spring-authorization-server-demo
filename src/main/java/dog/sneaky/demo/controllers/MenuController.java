@@ -1,8 +1,9 @@
 package dog.sneaky.demo.controllers;
 
 
-import dog.sneaky.demo.controllers.controller.dto.MenuDTO;
-import dog.sneaky.demo.controllers.controller.dto.ZtreeDTO;
+import dog.sneaky.demo.common.MenuDTO;
+import dog.sneaky.demo.common.ZtreeDTO;
+import dog.sneaky.demo.data.dp.Deleted;
 import dog.sneaky.demo.data.eneity.Menus;
 import dog.sneaky.demo.data.repository.MenusRepository;
 import dog.sneaky.demo.services.impl.MenuService;
@@ -76,6 +77,7 @@ public class MenuController {
         if (!b) {
             perms = String.format("ROLE_%s", perms);
             menus.setPerms(perms);
+            menus.setDeleted(new Deleted(false));
         }
 
         menusRepository.save(menus);

@@ -1,6 +1,7 @@
 package dog.sneaky.demo.data.eneity;
 
 import dog.sneaky.demo.data.EntityID;
+import dog.sneaky.demo.data.dp.Deleted;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Table;
@@ -16,6 +17,6 @@ public class Menus extends EntityID<Long> {
     private String menuType;
     private String perms;
     private String url;
-    private String deleted;
+    private Deleted deleted;
 
 }

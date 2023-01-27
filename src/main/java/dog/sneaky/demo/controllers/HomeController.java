@@ -1,7 +1,7 @@
 package dog.sneaky.demo.controllers;
 
 
-import dog.sneaky.demo.controllers.controller.dto.MenuDTO;
+import dog.sneaky.demo.common.MenuDTO;
 import dog.sneaky.demo.data.eneity.Menus;
 import dog.sneaky.demo.data.repository.MenusRepository;
 import jakarta.servlet.http.HttpServletRequest;

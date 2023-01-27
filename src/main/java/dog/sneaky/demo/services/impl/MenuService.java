@@ -1,10 +1,11 @@
 package dog.sneaky.demo.services.impl;
 
 
-import dog.sneaky.demo.controllers.controller.dto.MenuDTO;
+import dog.sneaky.demo.common.MenuDTO;
 import dog.sneaky.demo.controllers.controller.dto.MenuSaveORUpdateCommand;
 import dog.sneaky.demo.controllers.controller.dto.MenuSaveORUpdateDTO;
-import dog.sneaky.demo.controllers.controller.dto.ZtreeDTO;
+import dog.sneaky.demo.common.ZtreeDTO;
+import dog.sneaky.demo.data.dp.Deleted;
 import dog.sneaky.demo.data.eneity.Menus;
 import dog.sneaky.demo.data.repository.MenusRepository;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,21 @@ public class MenuService {
         return menuDTOS;
     }
 
+
+    public List<ZtreeDTO> listMenusZtrees(List<Menus> menus) {
+//        List<MyMenusDO> myMenus = myMenusDAO.listMenus(null);
+        List<ZtreeDTO> ztreeDTOS = new ArrayList<>();
+        for (Menus myMenu : menus) {
+            ZtreeDTO ztreeDTO = new ZtreeDTO();
+            ztreeDTO.setId(myMenu.getId());
+            ztreeDTO.setPId(myMenu.getParentId());
+            ztreeDTO.setName(myMenu.getMenuName());
+            ztreeDTOS.add(ztreeDTO);
+        }
+        return ztreeDTOS;
+    }
+
+
     public List<ZtreeDTO> listMenusZtrees() {
 //        List<MyMenusDO> myMenus = myMenusDAO.listMenus(null);
         Iterable<Menus> menus = menusRepository.findAll();
@@ -124,7 +140,7 @@ public class MenuService {
         menus.ifPresent(it->{
             Menus entity = new Menus();
             entity.setId(menusId);
-            entity.setDeleted("Y");
+            entity.setDeleted(new Deleted(true));
             menusRepository.save(entity);
         });
     }

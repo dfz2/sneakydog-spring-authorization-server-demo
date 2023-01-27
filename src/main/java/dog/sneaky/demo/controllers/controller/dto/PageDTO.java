@@ -1,5 +1,6 @@
 package dog.sneaky.demo.controllers.controller.dto;
 
+import dog.sneaky.demo.common.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
