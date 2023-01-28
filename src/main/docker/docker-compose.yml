@@ -36,5 +36,5 @@ services:
     ports:
       - "9999:9008"
     environment:
-      - "env=staging"
+      - "ENV=staging"
 

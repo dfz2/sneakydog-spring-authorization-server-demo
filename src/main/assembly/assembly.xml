@@ -25,16 +25,17 @@
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/application</outputDirectory>
             <includes>
                 <include>sneakydog-spring-authorization-server-demo-0.0.1-SNAPSHOT.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>src/main/resources</directory>
-            <outputDirectory>/conf</outputDirectory>
+            <outputDirectory>/application/conf</outputDirectory>
             <includes>
                 <include>*.yml</include>
+                <include>logback-spring.xml</include>
             </includes>
         </fileSet>
     </fileSets>
