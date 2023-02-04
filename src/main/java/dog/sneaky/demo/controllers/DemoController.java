@@ -19,4 +19,13 @@ public class DemoController {
     public String logfile(){
         return "demo/logfile";
     }
+
+    @GetMapping("/jbnbook")
+    public String jbnbook(){
+        return "demo/jpnotebook";
+    }
+
+
+
+
 }
