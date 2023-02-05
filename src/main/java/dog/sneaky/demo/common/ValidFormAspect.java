@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Component
 public class ValidFormAspect {
 
-    @Pointcut("execution(* dog.sneaky.demo.controllers.RegisteredClientsController.resetClientSecret(..))")
+    @Pointcut("execution(* dog.sneaky.demo.controllers.oauth2.RegisteredClientsController.resetClientSecret(..))")
     public void pointcut111() {
     }
 
