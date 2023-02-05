@@ -2,8 +2,11 @@
 package dog.sneaky.demo.configuration;
 
 
+import org.springframework.context.annotation.Configuration;
+
 //@Configuration
-public class AuthorizationServerConfiguration {
+@Configuration
+public class AuthorizationServerConfiguration extends AbstractOauth2Configuration {
 //
 //    @Bean
 //    @Order(Ordered.HIGHEST_PRECEDENCE)
