@@ -9,9 +9,13 @@ services:
     restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"
   redisdev:
     hostname: redisdev
     container_name: "redisdev"
     image: redis:latest
     restart: on-failure
     command: redis-server --requirepass 123456 --appendonly yes
+    ports:
+      - "6379:6379"
