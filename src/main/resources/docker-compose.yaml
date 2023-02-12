@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  mysqldbdev:
+    hostname: mysqldbdev
+    image: mysql:latest
+    container_name: mysqldbdev
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+  redisdev:
+    hostname: redisdev
+    container_name: "redisdev"
+    image: redis:latest
+    restart: on-failure
+    command: redis-server --requirepass 123456 --appendonly yes
