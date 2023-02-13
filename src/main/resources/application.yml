@@ -28,7 +28,7 @@ spring:
     job-store-type: jdbc
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://192.168.3.235:3306/local2"
+    url: "jdbc:mysql://localhost:3306/local"
     username: root
     password: 123456
   #  redis:
@@ -72,7 +72,7 @@ spring:
     redis:
       repositories:
         enabled: false
-      host: 192.168.3.235
+      host: localhost
       port: 6379
       password: 123456
   thymeleaf:
