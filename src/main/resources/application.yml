@@ -8,7 +8,7 @@ server:
         secure: true
 
   error:
-    include-exception: on
+    include-exception: true
     include-binding-errors: on_param
     include-message: on_param
     include-stacktrace: on_param
@@ -28,9 +28,9 @@ spring:
     job-store-type: jdbc
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/local"
+    url: "jdbc:mysql://localhost:3306/test"
     username: root
-    password: 123456
+    password: example
   #  redis:
 #    redisson:
 #      config: |
