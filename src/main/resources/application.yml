@@ -28,9 +28,9 @@ spring:
     job-store-type: jdbc
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/test"
+    url: "jdbc:mysql://${DEV_SERVER_DOMAIN}:4306/test"
     username: root
-    password: example
+    password: ${MYSQL_PASSWORD}
   #  redis:
 #    redisson:
 #      config: |
@@ -56,8 +56,8 @@ spring:
 #        "transportMode": "NIO"
   mail:
     default-encoding: utf-8
-    username: 517233020@qq.com
-    password: cpwikrsuennjbhfh
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
     host: "smtp.qq.com"
     port: "587"
     protocol: smtp
@@ -72,9 +72,9 @@ spring:
     redis:
       repositories:
         enabled: false
-      host: localhost
-      port: 6379
-      password: 123456
+      host: ${DEV_SERVER_DOMAIN}
+      port: 7379
+      password: ${REDIS_PASSWORD}
   thymeleaf:
     cache: false
     enabled: true
